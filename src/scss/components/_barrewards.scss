@@ -21,6 +21,7 @@
   }
 
   &-content {
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -32,14 +33,15 @@
     &--reward {
       text-align: center;
       width: 25%;
-      
-
       p{
         font-weight: 600;
         color: #dedede;
       }
       p.active {
         color: #444444;
+      }
+      p.point-none {
+        color: #44444400;
       }
     }
   }

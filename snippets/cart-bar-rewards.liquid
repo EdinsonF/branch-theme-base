@@ -17,8 +17,17 @@
 
   <div class="container__reward-content">
     
-    <div class="container__reward-content--reward">
-      <p class="point-shipping">|</p> 
+    <div class="container__reward-content--reward">   
+        <p 
+          class="point-shipping
+          {% unless active_reward_one or  active_reward_two %}
+            point-none
+          {% endunless %}
+          "
+        >
+          |
+        </p> 
+      
       ${{ amount_free_shipping }} = {{ text_free_shipping }}
     </div>
     
