@@ -73,14 +73,15 @@
             <div class="spinner spinn-{{ item.variant.id }}">
             </div>
           </div>
-  
-          <div class="item-quantity">
-            {% render 'input-quantity' 
-              id: item.variant.id
-              cart_item: item,
-              index: forloop.index,
-            %}
-          </div>
+          {% unless item.variant.price == 0%}
+            <div class="item-quantity">
+              {% render 'input-quantity' 
+                id: item.variant.id
+                cart_item: item,
+                index: forloop.index,
+              %}
+            </div>
+          {% endunless %}
         </div>
       </div>
       

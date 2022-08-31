@@ -1,4 +1,5 @@
 import api from "../services/api";
+import { barProgressReward } from "../utils/bar-reward";
 import { $Q, $Qll } from "../utils/query-selector";
 import { dataToggle, toggleDataActive } from "../utils/toggle-dataset";
 import {
@@ -9,7 +10,6 @@ import {
 } from "./update-cart";
 
 const CART_SECTION = "side-cart,cart-page";
-
 /**
  * Listen if add to cart form is submited
  * if add to cart form is submited add products in cart
@@ -75,6 +75,23 @@ const addProducts = async (event) => {
   updatetotalPrice(sections["side-cart"]);
 }
 
+
+/**
+ * Event add product reward
+ */
+export const addRewardProduct = async (itemId) => {
+
+  const cartParams = {
+    id: itemId,
+    quantity: 1,
+    sections: CART_SECTION
+  };
+
+  const { sections = null } = await api.updateCart(cartParams);
+  if (!sections) return null;
+
+  updateCartItems(sections["side-cart"]);
+}
 /**
  * Event onChange in the cart item
  */
@@ -185,3 +202,5 @@ export const openCloseCart = () => {
     { overlay: true }
   )
 }
+
+barProgressReward($Q('#data-reward'));

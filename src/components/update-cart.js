@@ -2,6 +2,7 @@ import { stringToHTML } from '../utils/to-html';
 import { $Q, $Qll } from '../utils/query-selector';
 import { setQuantity } from "../utils/input-quantity";
 import { deleteItem, onChangeItemCart } from "./cart";
+import { barProgressReward } from '../utils/bar-reward';
 
 /**
  * Update cart items section in sidecart
@@ -28,9 +29,14 @@ export const updateCartItems = (str) => {
  * @param {string} str - String HTML of section rendeirng
  */
  export const updateCartbutton = (str) => {
-   
+
+  const inputBarReward = $Q('#data-reward', stringToHTML(str));
+      
   const btnContainer = $Q('.cart-footer', stringToHTML(str));
   const domBtnContainer = $Qll('#container-footer-js');
+
+  barProgressReward(inputBarReward);
+  
   if (btnContainer) {
 
     domBtnContainer.forEach( element => {
