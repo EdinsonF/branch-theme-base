@@ -79,15 +79,11 @@ const addProducts = async (event) => {
 /**
  * Event add product reward
  */
-export const addRewardProduct = async (itemId) => {
+export const addRewardProduct = async (itemsIds) => {
 
-  const cartParams = {
-    id: itemId,
-    quantity: 1,
-    sections: CART_SECTION
-  };
+  console.log("product", itemsIds);
 
-  const { sections = null } = await api.updateCart(cartParams);
+  const { sections } = await api.updateCart(itemsIds, CART_SECTION);
   if (!sections) return null;
 
   updateCartItems(sections["side-cart"]);

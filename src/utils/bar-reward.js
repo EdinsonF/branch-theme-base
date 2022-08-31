@@ -8,18 +8,69 @@ import { $Q } from './query-selector'
 export const barProgressReward = (input) => {
 
   const totalPrice = parseFloat(input.dataset.cartTotal) / 100;
-  const limitPrice = input.dataset.limitPrice;
   const progressContainer = $Q(".progress-js");
 
-  const barWidth = totalPrice / limitPrice * 100;
+  const barWidth = validatePorcentageMatch(totalPrice);
 
   pointColorEval(totalPrice);
   
-  if (barWidth > barWidth) {
+  if (barWidth > 100 ) {
     progressContainer.style.width = "100%";
   } else {
     progressContainer.style.width = `${barWidth}%`;
   }
+}
+
+/**
+ * validate porcentage match point break
+ * @param {DOM element} input - input hidde with data
+ */
+const validatePorcentageMatch = (totalPrice) => {
+  const dataAll = $Q('#data-reward');
+  const activeRewardOne = dataAll?.dataset?.activeRewardOne;
+  const activeRewardTwo = dataAll?.dataset?.activeRewardTwo;
+  const limitFreeShipping = dataAll?.dataset?.amountFreeShipping;
+  const limitProductOne = dataAll?.dataset?.amountProductOne;
+  const limitProductTwo = dataAll?.dataset?.amountProductTwo;
+ 
+  if(activeRewardOne === 'false' && activeRewardTwo === 'false'){
+    console.log("return", (limitFreeShipping / totalPrice) * 100);
+    return ( totalPrice / limitFreeShipping) * 100;
+  }
+
+  let percentageBefore = 0;
+
+  if (totalPrice <= limitFreeShipping){
+    percentageBefore = calculatePorcentageBefore(limitFreeShipping, 19);
+  } else if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne) {
+    percentageBefore = calculatePorcentageBefore(limitProductOne, 50); 
+  } else if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
+    percentageBefore = calculatePorcentageBefore(limitProductTwo, 81); 
+  }else {
+    percentageBefore = 100;
+  }
+
+  let percentageAfter = totalPrice / percentageBefore;
+  let totalBar =  calculatePercentageAfter(totalPrice, limitFreeShipping, limitProductOne, limitProductTwo, percentageAfter);
+
+  return totalBar;
+}
+
+const calculatePorcentageBefore = (limit, breakPoint) => {
+  return ((parseFloat(limit) / 100) / breakPoint) * 100;
+}
+
+const calculatePercentageAfter = (totalPrice, limitFreeShipping, limitProductOne, limitProductTwo, percentageAfter) => {
+
+  if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne && percentageAfter < 19) {
+    percentageAfter = 25;
+  }else if (totalPrice > limitProductOne && totalPrice < limitProductTwo && percentageAfter < 50) {
+    percentageAfter = 53;
+  } else if (totalPrice >= limitProductTwo && percentageAfter < 81) {  
+    percentageAfter = 100;
+  }
+
+  return percentageAfter;
 }
 
 /**
@@ -39,9 +90,72 @@ const pointColorEval = (totalPrice) => {
   const limitProductOne = dataAll?.dataset?.amountProductOne;
   const limitProductTwo = dataAll?.dataset?.amountProductTwo;
 
-  if(pointShipping) pointChangeColor(pointShipping, limitFreeShipping <= totalPrice)
-  if(pointProductOne) productRewardSend(pointChangeColor(pointProductOne, limitProductOne <= totalPrice), productOne); 
-  if(pointProductTwo) productRewardSend(pointChangeColor(pointProductTwo, limitProductTwo <= totalPrice), productTwo)
+  if(pointShipping) pointChangeColor(pointShipping, limitFreeShipping <= totalPrice);
+  if(pointProductOne) pointChangeColor(pointProductOne, limitProductOne <= totalPrice);
+  if(pointProductTwo) pointChangeColor(pointProductTwo, limitProductTwo <= totalPrice);
+
+
+  const objectProduct = {
+    [limitFreeShipping]: [limitFreeShipping, null],
+    [limitProductOne]: [limitProductOne, [productOne],[productOne, productTwo]],
+    [limitProductTwo]: [limitProductTwo, [productOne, productTwo],[productOne, productTwo]]
+
+  }
+
+  console.log("object", objectProduct);
+
+  if(totalPrice >= limitProductOne) {
+    const dataProximity = Object.keys(objectProduct).reverse().find(element => element < totalPrice);
+
+    evalAddProduct(objectProduct[dataProximity], totalPrice);
+  }else {
+    console.log("vaciar carrito completo");
+    evalAddProduct(objectProduct[limitProductTwo], totalPrice);
+  }
+  
+  
+    /* productRewardSendTwo(, { [productOne] : 1 , [productTwo]:1 })
+
+    productRewardSendOne(, { [productOne] : 1 }); */
+
+     
+  
+}
+
+const evalAddProduct = (data, totalPrice) => {
+
+  if(totalPrice >= data[0]) {
+
+    if(data[1].length === 2 ){
+      console.log("debe agregar 2 producto");
+
+      if(!$Q(`[data-id='${data[1][1]}']`)){
+        productRewardSend({[data[1][0]]: 1, [data[1][1]]: 1});
+      }
+    }else if (data[1].length === 1){
+      console.log("debe agregar 1 producto");
+      if(!$Q(`[data-id='${data[1][0]}']`)){
+        productRewardSend({[data[1][0]]: 1});
+      }
+      if($Q(`[data-id='${data[2][1]}']`)){
+        deletedProductReward({[data[2][1]]: 0});
+      }
+    }else {
+      console.log("agregar producto");
+    }
+  }
+
+  if(totalPrice < data[0]){
+    console.log("deleted products");
+
+    if($Q(`[data-id='${data[2][1]}']`)){
+        deletedProductReward({[data[1][0]]: 0, [data[1][1]]: 0});
+      }else if ($Q(`[data-id='${data[2][0]}']`)){
+        deletedProductReward({[data[1][0]]: 0});
+      }else {
+      console.log("eliminar productos");
+    }
+  }
 }
 
 /**
@@ -63,20 +177,16 @@ const pointChangeColor = (point, condition) => {
  * @param {boolean} conditional - true or false
  * @param {number} id_product - id product current
  */
-const productRewardSend = async (conditional, id_product) => {
+const productRewardSend = async ( itemsIds ) => {
 
-  const productIsCart = $Q(`[data-id='${id_product}']`);
-
-  if(conditional){
-    if(productIsCart) return;
-    await addRewardProduct(id_product)
-    return;
-  }
-
-  if(!productIsCart) return;
-  const indexItem = productIsCart.dataset.index; 
-  updateCart(indexItem, 0, id_product)
+    await addRewardProduct(itemsIds)
+    
 }
 
+const deletedProductReward = async ( itemsIds ) => {
+
+  await addRewardProduct(itemsIds)
+ 
+}
 
 

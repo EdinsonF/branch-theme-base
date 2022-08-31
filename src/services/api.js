@@ -51,16 +51,13 @@ class API {
   * the quantity and section to update
   * @returns {object} The JSON of the cart and HTML of the sections
   */
-  async updateCart({
-    id,
-    quantity,
-    sections = undefined,
-  }) {
+  async updateCart(
+    objectItem,
+    sections = undefined
+  ) {
 
     let formData = {
-      updates: {
-        [id]: quantity,
-      }
+      updates: objectItem
     };
 
     //Support bundled section rendering
@@ -77,6 +74,7 @@ class API {
         url: `${routes.cart_update_url}.js`,
         data: JSON.stringify(formData),
       });
+      console.log("data res", data);
       return data;
     } catch (error) {
       console.error(`Error: ${error.message}`);
