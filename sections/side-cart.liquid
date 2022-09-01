@@ -1,18 +1,18 @@
 {% assign cart_title = "sections.cart.title" | t %}
 
 {%- liquid
-  assign active_reward_one = section.settings.active_reward_one
   assign active_reward_two = section.settings.active_reward_two
+  assign active_reward_three = section.settings.active_reward_three
   assign amount_reward_one = section.settings.amount_reward_one
   assign amount_reward_two = section.settings.amount_reward_two
-  assign amount_free_shipping = section.settings.amount_free_shipping
+  assign amount_reward_three = section.settings.amount_reward_three
   assign cart_total = cart.original_total_price
-  assign limit_price = amount_free_shipping
+  assign limit_price = amount_reward_one
 -%}
-{% if active_reward_one %}
+{% if active_reward_two %}
   {% assign limit_price = amount_reward_one %}
 {% endif %}
-{% if active_reward_two %}
+{% if active_reward_three %}
   {% assign limit_price = amount_reward_two %}
 {% endif %}
 
@@ -27,16 +27,17 @@
   %}
 
   {% render 'cart-bar-rewards'
-    active_reward_one: active_reward_one, 
-    active_reward_two: active_reward_two,
-    amount_free_shipping: amount_free_shipping,
+    active_reward_two: active_reward_two, 
+    active_reward_three: active_reward_three,
     amount_reward_one: amount_reward_one,
     product_reward_one: section.settings.product_reward_one,
     amount_reward_two: amount_reward_two,
     product_reward_two: section.settings.product_reward_two,
-    text_free_shipping: section.settings.text_free_shipping,
+    amount_reward_three: amount_reward_three,
+    product_reward_three: section.settings.product_reward_three,
     text_reward_one: section.settings.text_reward_one,
     text_reward_two: section.settings.text_reward_two,
+    text_reward_three: section.settings.text_reward_three,
     limit_price: limit_price,
     cart_total: cart_total
   %}
@@ -69,35 +70,19 @@
     },
     {
       "type": "header",
-      "content": "bar rewards"
-    },
-    {
-      "type": "number",
-      "id": "amount_free_shipping",
-      "label": "Limit amount free shipping",
-      "default": 10
-    },
-    {
-      "type": "text",
-      "id": "text_free_shipping",
-      "label": "Text free shipping",
-      "default": "Livraison offerte !"
-    },
-    {
-      "type": "header",
       "content": "Gift products"
     },
-    {
-      "type": "number",
-      "id": "amount_reward_one",
-      "label": "limit amount product one",
-      "default": 50
+    { 
+    "type": "number",
+    "id": "amount_reward_one",
+    "label": "limit amount product one",
+    "default": 10
     },
     {
       "type": "text",
       "id": "text_reward_one",
       "label": "Text reward one",
-      "default": "Un pilulier offert !"
+      "default": "free product 1"
     },
     {
       "type": "product",
@@ -108,13 +93,13 @@
       "type": "number",
       "id": "amount_reward_two",
       "label": "limit amount product two",
-      "default": 100
+      "default": 50
     },
     {
       "type": "text",
       "id": "text_reward_two",
       "label": "Text reward two",
-      "default": "Un cabas offert!"
+      "default": "free poduct 2"
     },
     {
       "type": "product",
@@ -122,19 +107,36 @@
       "label": "Product two"
     },
     {
+      "type": "number",
+      "id": "amount_reward_three",
+      "label": "limit amount product three",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "text_reward_three",
+      "label": "Text reward three",
+      "default": "free product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_reward_three",
+      "label": "Product three"
+    },
+    {
       "type": "header",
       "content": "active rewards"
     },
     {
       "type": "checkbox",
-      "id": "active_reward_one",
+      "id": "active_reward_two",
       "label": "Active reward one",
       "default": true
     },
     {
       "type": "checkbox",
-      "id": "active_reward_two",
-      "label": "Active reward two",
+      "id": "active_reward_three",
+      "label": "Active reward three",
       "default": true
     }
   ]

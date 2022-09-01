@@ -1,15 +1,16 @@
 <div class="container__reward cart-margins__inline">
   <div
     id="data-reward"
-    data-amount-free-shipping="{{ amount_free_shipping }}"
     data-amount-product-one="{{ amount_reward_one }}"
     data-product-one="{{ product_reward_one.variants[0].id }}"
     data-amount-product-two="{{ amount_reward_two }}"
-    data-product-two="{{ product_reward_two.variants[0].id}}"
+    data-product-two="{{ product_reward_two.variants[0].id }}"
+    data-amount-product-three="{{ amount_reward_three }}"
+    data-product-three="{{ product_reward_three.variants[0].id}}"
     data-limit-price="{{ limit_price }}"
     data-cart-total="{{ cart_total }}"
-    data-active-reward-one="{{ active_reward_one }}"
     data-active-reward-two="{{ active_reward_two }}"
+    data-active-reward-three="{{ active_reward_three }}"
   >
   </div>
   <div class="container__reward-bar">
@@ -21,8 +22,8 @@
     
     <div class="container__reward-content--reward">   
         <p 
-          class="point-shipping
-          {% unless active_reward_one or  active_reward_two %}
+          class="point-unique
+          {% unless active_reward_two or  active_reward_three %}
             point-none
           {% endunless %}
           "
@@ -30,19 +31,19 @@
           |
         </p> 
       
-      ${{ amount_free_shipping }} = {{ text_free_shipping }}
+      ${{ amount_reward_one }} = {{ text_reward_one }}
     </div>
     
-    {% if active_reward_one %}
+    {% if active_reward_two %}
       <div class="container__reward-content--reward">
         <p class="point-product-one">|</p> 
-        ${{ amount_reward_one }} = {{ text_reward_one }}
+        ${{ amount_reward_two }} = {{ text_reward_two }}
       </div>
     {% endif %}
-    {% if active_reward_two %}
+    {% if active_reward_three %}
       <div class="container__reward-content--reward"> 
         <p class="point-product-two">|</p> 
-        ${{ amount_reward_two }} = {{ text_reward_two }}
+        ${{ amount_reward_three }} = {{ text_reward_three }}
       </div>
     {% endif %}
 

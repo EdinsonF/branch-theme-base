@@ -25,22 +25,25 @@ export const barProgressReward = (input) => {
 const getDataAll = () => {
 
   const dataAll = $Q('#data-reward');
-  const activeRewardOne = dataAll?.dataset?.activeRewardOne;
-  const activeRewardTwo = dataAll?.dataset?.activeRewardTwo;
-  const limitFreeShipping = dataAll?.dataset?.amountFreeShipping;
-  const limitProductOne = dataAll?.dataset?.amountProductOne;
+  const activeRewardOne = dataAll?.dataset?.activeRewardTwo;
+  const activeRewardTwo = dataAll?.dataset?.activeRewardThree;
+
+  const limitProductOne = dataAll?.dataset?.amountProductOne; 
   const limitProductTwo = dataAll?.dataset?.amountProductTwo;
+  const limitProductThree = dataAll?.dataset?.amountProductThree;
   const productOne = dataAll?.dataset?.productOne;
   const productTwo = dataAll?.dataset?.productTwo;
+  const productThree = dataAll?.dataset?.productThree;
 
   return {
     activeRewardOne,
     activeRewardTwo,
-    limitFreeShipping,
     limitProductOne,
     limitProductTwo,
+    limitProductThree,
     productOne,
-    productTwo
+    productTwo,
+    productThree
   }
 }
 
@@ -53,34 +56,36 @@ const validatePercentageMatch = (totalPrice) => {
   let {
     activeRewardOne,
     activeRewardTwo,
-    limitFreeShipping,
     limitProductOne,
-    limitProductTwo
+    limitProductTwo,
+    limitProductThree
   } = getDataAll();
  
   /* only free shipping */
   if(activeRewardOne === 'false' && activeRewardTwo === 'false'){
-    return ( totalPrice / limitFreeShipping) * 100;
+    return ( totalPrice / limitProductOne) * 100;
   }
 
   /* only one rewards */
-  limitProductTwo = productsIsRewardsActive(activeRewardOne, activeRewardTwo, limitProductOne, limitProductTwo);
+  limitProductThree = productsIsRewardsActive(activeRewardOne, activeRewardTwo, limitProductTwo, limitProductThree);
+
   
   /* all rewards */  
   let percentageBefore = 0;
 
-  if (totalPrice <= limitFreeShipping){
-    percentageBefore = calculatePercentageBefore(limitFreeShipping, 13);
-  } else if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne) {
-    percentageBefore = calculatePercentageBefore(limitProductOne, 50); 
-  } else if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
-    percentageBefore = calculatePercentageBefore(limitProductTwo, 88); 
+  
+  if (totalPrice <= limitProductOne){
+    percentageBefore = calculatePercentageBefore(limitProductOne, 13);
+  } else if (totalPrice > limitProductOne && totalPrice <= limitProductTwo) {
+    percentageBefore = calculatePercentageBefore(limitProductTwo, 50);
+  } else if (totalPrice > limitProductTwo && totalPrice < limitProductThree) {
+    percentageBefore = calculatePercentageBefore(limitProductThree, 88); 
   }else {
     percentageBefore = 100;
   }
 
   let percentageAfter = totalPrice / percentageBefore;
-  let totalBar =  calculatePercentageAfter(percentageAfter, totalPrice, limitProductTwo);
+  let totalBar =  calculatePercentageAfter(percentageAfter, totalPrice, limitProductThree);
 
   return totalBar;
 }
@@ -111,18 +116,18 @@ const calculatePercentageBefore = (limit, breakPoint) => {
  * @param {number} totalPrice - price cart total
  * @param {number} limitProductTwo - limit product two rewards
  */
-const calculatePercentageAfter = (percentageAfter, totalPrice, limitProductTwo) => {
+const calculatePercentageAfter = (percentageAfter, totalPrice, limitProductThree) => {
 
   let {
-    limitFreeShipping,
-    limitProductOne
+    limitProductOne,
+    limitProductTwo
   } = getDataAll();
  
-  if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne && percentageAfter < 13) {
+  if (totalPrice > limitProductOne && totalPrice <= limitProductTwo && percentageAfter < 13) {
     percentageAfter = 20;
-  }else if (totalPrice > limitProductOne && totalPrice < limitProductTwo && percentageAfter < 50) {
+  }else if (totalPrice > limitProductTwo && totalPrice < limitProductThree && percentageAfter < 50) {
     percentageAfter = 53;
-  } else if (totalPrice >= limitProductTwo && percentageAfter < 88) {  
+  } else if (totalPrice >= limitProductThree && percentageAfter < 88) {  
     percentageAfter = 100;
   }
 
@@ -136,18 +141,18 @@ const calculatePercentageAfter = (percentageAfter, totalPrice, limitProductTwo) 
 const pointColorEval = (totalPrice) => {
 
   const {
-    limitFreeShipping,
     limitProductOne,
-    limitProductTwo
+    limitProductTwo,
+    limitProductThree
   } = getDataAll();
 
-  const pointShipping = $Q('.point-shipping');
+  const pointUnique = $Q('.point-unique');
   const pointProductOne = $Q('.point-product-one');
   const pointProductTwo = $Q('.point-product-two');
 
-  if(pointShipping) pointChangeColor(pointShipping, limitFreeShipping <= totalPrice);
-  if(pointProductOne) pointChangeColor(pointProductOne, limitProductOne <= totalPrice);
-  if(pointProductTwo) pointChangeColor(pointProductTwo, limitProductTwo <= totalPrice);
+  if(pointUnique) pointChangeColor(pointUnique, limitProductOne <= totalPrice);
+  if(pointProductOne) pointChangeColor(pointProductOne, limitProductTwo <= totalPrice);
+  if(pointProductTwo) pointChangeColor(pointProductTwo, limitProductThree <= totalPrice);
 
 }
 
@@ -156,30 +161,31 @@ const validateProductsRewards = (totalPrice) => {
   let {
     productOne,
     productTwo,
-    limitFreeShipping,
+    productThree,
     limitProductOne,
+    limitProductThree,
     limitProductTwo,
     activeRewardOne,
     activeRewardTwo
   } = getDataAll();
 
   const objectProduct = {
-    [limitFreeShipping]: [limitFreeShipping, null],
+    [limitProductOne]: [limitProductOne, [productOne], [productOne, productTwo, productThree]],
     ...(activeRewardOne === 'true' && {
-      [limitProductOne]: [limitProductOne, [productOne],[productOne, productTwo]]
+      [limitProductTwo]: [limitProductTwo, [productOne, productTwo],[productTwo, productThree]]
     }),
     ...(activeRewardTwo === 'true' && activeRewardOne === 'false' && {
-      [limitProductTwo]: [
-        limitProductTwo, 
-        [ productTwo],
-        [ productTwo]
+      [limitProductThree]: [
+        limitProductThree, 
+        [ productThree],
+        [ productThree]
       ]
     }),
     ...(activeRewardTwo === 'true' && activeRewardOne === 'true' && {
-      [limitProductTwo]: [
-        limitProductTwo, 
-        [ productOne, productTwo],
-        [ productOne, productTwo]
+      [limitProductThree]: [
+        limitProductThree, 
+        [ productOne, productTwo, productThree],
+        [ productOne, productTwo, productThree]
       ]
     })
   }
@@ -191,16 +197,14 @@ const validateProductsRewards = (totalPrice) => {
 
   if(objectArr.length < 2) return;
 
-  const rewardsMin = activeRewardOne === 'true' 
-    ? limitProductOne 
-    : productsIsRewardsActive(activeRewardOne, activeRewardTwo, limitProductOne, limitProductTwo);
+  const rewardsMin = limitProductOne;
 
   if(totalPrice >= rewardsMin) {
      dataProximity &&
     evalAddProduct(objectProduct[dataProximity], totalPrice);
   }else {
-    limitProductTwo = productsIsRewardsActive(activeRewardOne, activeRewardTwo, limitProductOne, limitProductTwo);
-    evalAddProduct(objectProduct[limitProductTwo], totalPrice);
+    limitProductThree = rewardsMin;
+    evalAddProduct(objectProduct[limitProductThree], totalPrice);
   }
 }
 
@@ -208,17 +212,30 @@ const evalAddProduct = (data, totalPrice) => {
 
   if(totalPrice >= data[0]) {
 
-    if(data[1].length === 2 ){
-  
+    if(data[1].length === 3 ){
+
+      if(!$Q(`[data-id='${data[1][2]}']`)){
+        productRewardSend({[data[1][0]]: 1, [data[1][1]]: 1, [data[1][2]]: 1});
+      }
+    }else if(data[1].length === 2 ){
+
       if(!$Q(`[data-id='${data[1][1]}']`)){
         productRewardSend({[data[1][0]]: 1, [data[1][1]]: 1});
       }
+      if($Q(`[data-id='${data[2][1]}']`)){
+        deletedProductReward({[data[2][1]]: 0});
+      }
     }else if (data[1].length === 1){
-    
+
       if(!$Q(`[data-id='${data[1][0]}']`)){
         productRewardSend({[data[1][0]]: 1});
       }
-      if($Q(`[data-id='${data[2][1]}']`)){
+      
+      if($Q(`[data-id='${data[2][2]}']`)){
+
+        deletedProductReward({[data[2][1]]: 0, [data[2][2]]: 0});
+      }else if($Q(`[data-id='${data[2][1]}']`)){
+
         deletedProductReward({[data[2][1]]: 0});
       }
     }
@@ -227,9 +244,11 @@ const evalAddProduct = (data, totalPrice) => {
   if(totalPrice < data[0]){
 
     if($Q(`[data-id='${data[2][1]}']`)){
-        deletedProductReward({[data[1][0]]: 0, [data[1][1]]: 0});
+        deletedProductReward({[data[2][0]]: 0, [data[2][1]]: 0, [data[2][2]]: 0});
+      }else if ($Q(`[data-id='${data[2][1]}']`)){
+        deletedProductReward({[data[2][0]]: 0, [data[2][1]]: 0});
       }else if ($Q(`[data-id='${data[2][0]}']`)){
-        deletedProductReward({[data[1][0]]: 0});
+        deletedProductReward({[data[2][0]]: 0});
       }
   }
 }
