@@ -81,8 +81,6 @@ const addProducts = async (event) => {
  */
 export const addRewardProduct = async (itemsIds) => {
 
-  console.log("product", itemsIds);
-
   const { sections } = await api.updateCart(itemsIds, CART_SECTION);
   if (!sections) return null;
 

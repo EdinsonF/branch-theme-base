@@ -74,7 +74,7 @@ class API {
         url: `${routes.cart_update_url}.js`,
         data: JSON.stringify(formData),
       });
-      console.log("data res", data);
+
       return data;
     } catch (error) {
       console.error(`Error: ${error.message}`);
