@@ -22,6 +22,9 @@ export const barProgressReward = (input) => {
   }
 }
 
+/**
+ * get all data dom
+ */
 const getDataAll = () => {
 
   const dataAll = $Q('#data-reward');
@@ -85,6 +88,13 @@ const validatePercentageMatch = (totalPrice) => {
   return totalBar;
 }
 
+/**
+ * check is active rewards one or two
+ * @param {boolean} activeRewardOne - true or false reward one
+ * @param {boolean} activeRewardTwo - true or false reward two
+ * @param {number} limitProductOne - limit product one
+ * @param {number} limitProductTwo - limit product two
+ */
 const productsIsRewardsActive = (activeRewardOne, activeRewardTwo, limitProductOne, limitProductTwo) => {
   if((activeRewardOne === 'true' && activeRewardTwo === 'false' )
     || (activeRewardOne === 'false' && activeRewardTwo === 'true' ))
@@ -93,7 +103,6 @@ const productsIsRewardsActive = (activeRewardOne, activeRewardTwo, limitProductO
     }
 
     return limitProductTwo;
-
 }
 
 /**
@@ -151,6 +160,10 @@ const pointColorEval = (totalPrice) => {
 
 }
 
+/**
+ * validate object rewards for add product cart
+ * @param {number} totalPrice - total cart
+ */
 const validateProductsRewards = (totalPrice) => {
 
   let {
@@ -204,6 +217,11 @@ const validateProductsRewards = (totalPrice) => {
   }
 }
 
+/**
+ * eval product add or deleted if exist
+ * @param {array} data - info reward current
+ * @param {number} totalPrice - total cart
+ */
 const evalAddProduct = (data, totalPrice) => {
 
   if(totalPrice >= data[0]) {
