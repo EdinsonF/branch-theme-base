@@ -22,6 +22,7 @@ export const barProgressReward = (input) => {
   }
 }
 
+/* get all data dom */
 const getDataAll = () => {
 
   const dataAll = $Q('#data-reward');
@@ -73,7 +74,6 @@ const validatePercentageMatch = (totalPrice) => {
   /* all rewards */  
   let percentageBefore = 0;
 
-  
   if (totalPrice <= limitProductOne){
     percentageBefore = calculatePercentageBefore(limitProductOne, 13);
   } else if (totalPrice > limitProductOne && totalPrice <= limitProductTwo) {
@@ -90,6 +90,13 @@ const validatePercentageMatch = (totalPrice) => {
   return totalBar;
 }
 
+/**
+ * validate las rewards active
+ * @param {boolean} activeRewardOne - true or false reward one
+ * @param {boolean} activeRewardTwo - true or false reward two
+ * @param {number} limitProductOne - limint reward one
+ * @param {numeber} limitProductTwo - limint reward two
+ */
 const productsIsRewardsActive = (activeRewardOne, activeRewardTwo, limitProductOne, limitProductTwo) => {
   if((activeRewardOne === 'true' && activeRewardTwo === 'false' )
     || (activeRewardOne === 'false' && activeRewardTwo === 'true' ))
@@ -156,6 +163,10 @@ const pointColorEval = (totalPrice) => {
 
 }
 
+/**
+ * eval object product rewards
+ * @param {number} totalPrice - total cart
+ */
 const validateProductsRewards = (totalPrice) => {
 
   let {
@@ -190,7 +201,6 @@ const validateProductsRewards = (totalPrice) => {
     })
   }
 
-
   const objectArr = Object.keys(objectProduct);
 
   const dataProximity = objectArr.reverse().find(element => element < totalPrice);
@@ -208,8 +218,14 @@ const validateProductsRewards = (totalPrice) => {
   }
 }
 
+/**
+ * eval product rewards or add or delete
+ * @param {array} data - data product rewards
+ * @param {number} totalPrice - total cart
+ */
 const evalAddProduct = (data, totalPrice) => {
 
+  /* if > limit rewards current */
   if(totalPrice >= data[0]) {
 
     if(data[1].length === 3 ){
@@ -240,7 +256,8 @@ const evalAddProduct = (data, totalPrice) => {
       }
     }
   }
-
+  
+  /* if < limit rewards current */
   if(totalPrice < data[0]){
 
     if($Q(`[data-id='${data[2][1]}']`)){
