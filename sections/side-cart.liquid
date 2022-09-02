@@ -8,6 +8,7 @@
   assign amount_reward_three = section.settings.amount_reward_three
   assign cart_total = cart.original_total_price
   assign limit_price = amount_reward_one
+  assign active_rewards = section.settings.show_rewards
 -%}
 {% if active_reward_two %}
   {% assign limit_price = amount_reward_one %}
@@ -26,21 +27,25 @@
     cart: cart
   %}
 
-  {% render 'cart-bar-rewards'
-    active_reward_two: active_reward_two, 
-    active_reward_three: active_reward_three,
-    amount_reward_one: amount_reward_one,
-    product_reward_one: section.settings.product_reward_one,
-    amount_reward_two: amount_reward_two,
-    product_reward_two: section.settings.product_reward_two,
-    amount_reward_three: amount_reward_three,
-    product_reward_three: section.settings.product_reward_three,
-    text_reward_one: section.settings.text_reward_one,
-    text_reward_two: section.settings.text_reward_two,
-    text_reward_three: section.settings.text_reward_three,
-    limit_price: limit_price,
-    cart_total: cart_total
-  %}
+  <div id="is-show-rewards" data-active-rewards={{ active_rewards }}></div>
+  {% if active_rewards %}
+    {% render 'cart-bar-rewards'
+      active_reward_two: active_reward_two, 
+      active_reward_three: active_reward_three,
+      amount_reward_one: amount_reward_one,
+      discount_reward_one: section.settings.discount_reward_one,
+      amount_reward_two: amount_reward_two,
+      discount_reward_two: section.settings.discount_reward_two,
+      amount_reward_three: amount_reward_three,
+      discount_reward_three: section.settings.discount_reward_three,
+      text_reward_one: section.settings.text_reward_one,
+      text_reward_two: section.settings.text_reward_two,
+      text_reward_three: section.settings.text_reward_three,
+      limit_price: limit_price,
+      cart_total: cart_total
+    %}
+  {% endif %}
+  
   
   {% render 'cart-footer'
     cart: cart,
@@ -70,58 +75,67 @@
     },
     {
       "type": "header",
-      "content": "Gift products"
+      "content": "Rewards discount"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rewards",
+      "label": "Show rewards",
+      "default": true
     },
     { 
     "type": "number",
     "id": "amount_reward_one",
     "label": "limit amount product one",
-    "default": 10
+    "default": 20
     },
     {
       "type": "text",
       "id": "text_reward_one",
       "label": "Text reward one",
-      "default": "free product 1"
+      "default": "5% off"
     },
     {
-      "type": "product",
-      "id": "product_reward_one",
-      "label": "Product one"
+      "type": "text",
+      "id": "discount_reward_one",
+      "label": "Code reward one",
+      "default": "DISC-ONE-REWARDC0TFKXXEG1YV"
     },
     {
       "type": "number",
       "id": "amount_reward_two",
       "label": "limit amount product two",
-      "default": 50
+      "default": 80
     },
     {
       "type": "text",
       "id": "text_reward_two",
       "label": "Text reward two",
-      "default": "free poduct 2"
+      "default": "15% off"
     },
     {
-      "type": "product",
-      "id": "product_reward_two",
-      "label": "Product two"
+      "type": "text",
+      "id": "discount_reward_two",
+      "label": "Code reward two",
+      "default": "DISC-TWO-REWARD9C7QEFA4NC44"
     },
     {
       "type": "number",
       "id": "amount_reward_three",
       "label": "limit amount product three",
-      "default": 100
+      "default": 120
     },
     {
       "type": "text",
       "id": "text_reward_three",
       "label": "Text reward three",
-      "default": "free product 3"
+      "default": "25% off"
     },
     {
-      "type": "product",
-      "id": "product_reward_three",
-      "label": "Product three"
+      "type": "text",
+      "id": "discount_reward_three",
+      "label": "Code reward three",
+      "default": "DISC-THREE-REWARDHAGWF5JD8XNV"
     },
     {
       "type": "header",
@@ -130,7 +144,7 @@
     {
       "type": "checkbox",
       "id": "active_reward_two",
-      "label": "Active reward one",
+      "label": "Active reward two",
       "default": true
     },
     {

@@ -28,6 +28,10 @@
     position: absolute;
     top: 10px;
     z-index: -1;
+
+    &.center-flex {
+      justify-content: center;
+    }
   
 
     &--reward {

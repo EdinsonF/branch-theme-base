@@ -32,23 +32,23 @@ export const updateCartItems = (str) => {
 
   const inputBarReward = $Q('#data-reward', stringToHTML(str));
       
-  const btnContainer = $Q('.cart-footer', stringToHTML(str));
-  const domBtnContainer = $Qll('#container-footer-js');
+  const btnCheckout = $Q('.btn-checkout-js', stringToHTML(str));
+  const containerdomBtn = $Qll('.containet-btn-js');
 
   barProgressReward(inputBarReward);
-  
-  if (btnContainer) {
 
-    domBtnContainer.forEach( element => {
-      element.innerHTML = btnContainer.outerHTML;
+  if (btnCheckout) {
+    containerdomBtn.forEach( element => {
+      element.innerHTML = btnCheckout.outerHTML;
     })
 
     return;
   }
 
-  domBtnContainer.forEach( element => {
+  containerdomBtn.forEach( element => {
     element.innerHTML = '';
   })
+
   
 }
 
