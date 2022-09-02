@@ -61,7 +61,7 @@ export const updatePriceItem = (str, id) => {
 
   const {
     dataset,
-    outerText
+    outerText,
   } = $Q(`#price-${id}`, stringToHTML(str));
 
   $Qll(`.price-${id}`).forEach(
@@ -78,7 +78,6 @@ export const updatePriceItem = (str, id) => {
  * @param {String} quantity - Quantity variant by item cart
  */
  const updateOnCartPage = (id, quantity) => {
-
   $Qll(`.item-cart-js[id="${id}"]`).forEach(
     element => element.value = quantity
   )
@@ -89,15 +88,16 @@ export const updatePriceItem = (str, id) => {
  * @param {string} str - String HTML of section rendeirng
  */
  export const updatetotalPrice = (str) => {
-  
-  if(!$Q('.cartpage-footer__info--price')) return;
-  
-  if ($Q("#total-price", stringToHTML(str)) != null) {
+
+  if(!$Q("#total-price", stringToHTML(str))){
+    $Q('.cartpage-footer').style.display = 'none';
+    return;
+  }
+
+  if ($Q(".cartpage-footer__info--price") != null) {
     return $Q(".cartpage-footer__info--price").innerHTML = $Q(
       "#total-price",
       stringToHTML(str)
     ).outerText;
   }
-
-  $Q('.cartpage-footer').style.display = 'none';
 }
