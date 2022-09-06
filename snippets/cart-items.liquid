@@ -23,6 +23,8 @@
       </span>
     {% else %}    
     {% for item in cart.items %}
+
+    <script>console.log({{ item | json }})</script>
   
       <div
         class="cart-items__container"
@@ -32,7 +34,7 @@
         <div class="cart-items__container--product-title">
           <div class="cart-items__container--image"> 
             {% assign imgUrl = item.product.featured_media | image_url: '82x110' %}
-            {% assign image = item.product.featured_image %}
+            {% assign image = item.image %}
             {% render "render-image"
               class: "",
               attr: "data-live-item-image",
@@ -50,6 +52,15 @@
             <span>
               {{ item.variant.title }}
             </span>
+
+            {% render 'variant-form-cart'
+              product: item.product,
+              option_field: 'Color',
+              variant_selected: item.options_with_values,
+              index: forloop.index,
+              variant_old: item.variant.id
+            %}
+
           </div>
         </div>
       
@@ -59,7 +70,7 @@
               class="price-{{ item.variant.id }}-{{ forloop.index }}" 
               id="price-{{ item.variant.id }}-{{ forloop.index }}"
               data-quantity="{{ item.quantity }}"
-            >
+              >
               {{ item.original_line_price | money }}
             </span>
   

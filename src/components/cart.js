@@ -7,6 +7,8 @@ import {
   updateCartbutton,
   updatePriceItem
 } from "./update-cart";
+import { getDataVariant } from "./variants-change";
+import { options, selectVariant } from "./variants-product";
 
 const CART_SECTION = "side-cart,cart-page";
 
@@ -28,6 +30,32 @@ export const btnAddToCart = (formQuery) => {
       }
     )
   }
+}
+
+export const selectVarianSideCart = (component) => {
+  const parents = $Qll(component);
+
+  if (parents.length > 0) {
+    return parents.forEach(
+      parent => {
+        addChangeEvent(parent)
+      }
+    );
+  }
+
+}
+
+export const addChangeEvent = (parent) => {
+
+  options(parent).forEach(option => {
+    option.addEventListener(
+      'change',
+      (e) => {
+        selectVariant(parent);
+        getDataVariant(parent);
+      }
+    );
+  });
 }
 
 const submitForm = (form) => {
@@ -97,6 +125,8 @@ export const onChangeItemCart = () => {
  * @param {number} quantity new quantity
  */
 export const updateCart = async (line, quantity, id) => {
+  
+  console.log("id", id);
   addSpinner(`#price-${id}`);
   
   const cartParams = {

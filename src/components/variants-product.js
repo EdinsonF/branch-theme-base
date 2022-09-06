@@ -48,14 +48,14 @@ function iterationOptions (parent) {
  * @param {HTMLElement} parent - Dom element parent of all seletors options
  * @returns Replacement of id in the dom (on input[name="id"])
  */
-function selectVariant (parent) {
+export function selectVariant (parent) {
   let variantName = optionsChecked(parent);
   let variants = JSON.parse($Q('#variants', parent).value);
-
+  
   const variantFilter = variants.filter(
     variant => variant.title == variantName
   )
-
+  
   $Q('[name="id"]', parent).value = variantFilter[0].id
 }
 
@@ -67,6 +67,7 @@ function selectVariant (parent) {
  * @returns A variant name - string reference
  */
 function optionsChecked (parent) {
+
   let myOptions = [];
 
   options(parent).forEach(
@@ -87,7 +88,9 @@ function optionsChecked (parent) {
  * @param {HTMLElement} parent - Dom element parent of all seletors options
  * @returns Array of nodes
  */
-const options = (parent) => $Qll('.js-option', parent);
+export const options = (parent) =>{
+  return $Qll('.js-option', parent);
+} 
 
 /**
  * @param {Array} options - Array of option names
