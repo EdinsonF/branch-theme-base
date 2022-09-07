@@ -8,7 +8,7 @@ import {
   updatePriceItem
 } from "./update-cart";
 import { getDataVariant } from "./variants-change";
-import { options, selectVariant } from "./variants-product";
+import { buildOption, options, selectVariant } from "./variants-product";
 
 const CART_SECTION = "side-cart,cart-page";
 
@@ -32,22 +32,32 @@ export const btnAddToCart = (formQuery) => {
   }
 }
 
-export const selectVarianSideCart = (component) => {
+/**
+ * init event variant all element cart
+ * @param {HTML} component - dom element parent item variant element 
+ */
+export const eventSelectVarianSideCart = (component) => {
   const parents = $Qll(component);
 
   if (parents.length > 0) {
     return parents.forEach(
       parent => {
-        addChangeEvent(parent)
+        addChangeEventSelectVariant(parent)
       }
     );
   }
 
 }
 
-export const addChangeEvent = (parent) => {
+/**
+ * init event change item cart
+ * @param {HTML} parent - element variant change 
+ */
+export const addChangeEventSelectVariant = (parent) => {
 
+  validateVariantAvalible(parent);
   options(parent).forEach(option => {
+
     option.addEventListener(
       'change',
       (e) => {
@@ -56,6 +66,67 @@ export const addChangeEvent = (parent) => {
       }
     );
   });
+}
+
+/**
+ * get variant avaliable
+ * @param {HTML} parent - element variant change 
+ */
+const validateVariantAvalible = (parent) => {
+  const variantAll = JSON.parse($Q('#variants', parent).value);
+
+  let combinationHidden = [];
+  $Qll('.element-combination', parent).forEach(e => {
+    combinationHidden = [...combinationHidden, e.value] 
+  })
+  const optionHiddenJoin =  buildOption(combinationHidden);
+  const arrVisibilityCombination = variantAll.filter(
+    ele => ele.title.includes(optionHiddenJoin)
+  )
+
+  disableOptionVariant(parent, arrVisibilityCombination);
+
+}
+
+/**
+ * disabled variant unabaliable
+ * @param {HTML} parent - element variant change 
+ * @param {Array} arrVisibilityCombination - element variant iterable
+ */
+const disableOptionVariant = (parent, arrVisibilityCombination) => {
+
+  const optionChanges = $Qll('.js-option', parent);
+
+  arrVisibilityCombination.map((unavalible) =>{
+
+    optionChanges.forEach(fieldVisible => {
+
+      if(fieldVisible.type === 'radio'){
+        if(unavalible.title.includes(fieldVisible.value) && !unavalible.available){
+          fieldVisible.parentElement.classList.add('disabled-variant');
+          fieldVisible.setAttribute('disabled','disabled');
+        }
+      }
+      if(fieldVisible.type === 'select-one') {
+        disabledSelectOption(fieldVisible, unavalible);
+      }
+    })
+  })
+}
+
+/**
+ * disabled option type select
+ * @param {HTML} fieldVisible - Element current variant
+ * @param {Array} unavalible - array element match iterable
+ */
+const disabledSelectOption = (fieldVisible, unavalible) => {
+  for (let i = 0; i < fieldVisible.length; i++) {
+    const element = fieldVisible[i];
+
+    if(unavalible.title.includes(element.value) && !unavalible.available){
+      element.setAttribute('disabled','disabled');
+    }
+  }
 }
 
 const submitForm = (form) => {
@@ -100,6 +171,28 @@ const addProducts = async (event) => {
   updateCartItems(sections["side-cart"]);
   updateCartbutton(sections["side-cart"]);
   updatetotalPrice(sections["side-cart"]);
+  eventSelectVarianSideCart('.variant-cart');
+}
+
+export const addVariantNew = async (itemId) => {
+  const cartParams = {
+    items: [
+      {
+        id: itemId,
+        quantity: 1,
+      }
+    ],
+    sections: CART_SECTION
+  };
+
+  const { sections } = await api.addToCart(cartParams);
+  if (!sections) return null;
+
+  updateCartItems(sections["side-cart"]);
+  updateCartbutton(sections["side-cart"]);
+  updatetotalPrice(sections["side-cart"]);
+  eventSelectVarianSideCart('.variant-cart');
+
 }
 
 /**
@@ -124,9 +217,8 @@ export const onChangeItemCart = () => {
  * @param {number} id Product ID
  * @param {number} quantity new quantity
  */
-export const updateCart = async (line, quantity, id) => {
+export const updateCart = async (line, quantity, id, changeVariant) => {
   
-  console.log("id", id);
   addSpinner(`#price-${id}`);
   
   const cartParams = {
@@ -139,14 +231,18 @@ export const updateCart = async (line, quantity, id) => {
   
   if (!sections) return null;
 
+  if(changeVariant) return;
+
   if (quantity === 0) {
     updateCartItems(sections["side-cart"]);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
+    eventSelectVarianSideCart('.variant-cart');
   } else {
     updatePriceItem(sections["side-cart"], id);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
+    eventSelectVarianSideCart('.variant-cart');
   }
 }
 
@@ -156,6 +252,20 @@ export const updateCart = async (line, quantity, id) => {
  */
  const addSpinner = (element) => {
   $Q(element).innerHTML = '<div class="loading"></div>';
+}
+
+export const deleteItemChangeVariantSide = async (line, quantity, id) => {
+  addSpinner(`#price-${id}`);
+  
+  const cartParams = {
+    line,
+    quantity,
+    sections: CART_SECTION,
+  }
+
+  const { sections = null } = await api.changeCart(cartParams);
+  
+  if (!sections) return null;
 }
 
 

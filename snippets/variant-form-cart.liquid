@@ -1,13 +1,20 @@
 {% comment %}
-  Options in product form
+  render variant side cart unique slect - color checkbox or select list
 
   Accepts:
+  - product - object product
   - option_field: {String} Reference options in radio buttons. To render radio buttons include string with: 'Color'
+  - variant_selected - variant current select item cart
+  - index - number line item
+  - variant_old - variant old select adding cart
 
   Usage:
   {% render 'variants-form'
     product: product,
-    option_field: 'Color Material'
+    option_field: 'Color Material',
+    variant_selected: item.options_with_values,
+    index: forloop.index,
+    variant_old: item.variant.id
   %}
 {% endcomment %}
 
@@ -45,7 +52,7 @@
   {% assign lengthOptions = product.options | size %}
   {%- unless product.has_only_default_variant -%}
     {%- for option_name in product.options -%}
-
+    {%- assign option_visible = variant_selected | where: "name", option_name -%}
       {% if option_field == option_name %}
         {% liquid
           if forloop.index == 1
@@ -66,11 +73,6 @@
             <span class="variants--name">
               {{ option_name }}
             </span>
-            <div class="container__variants--selected">
-              <span class="variants--selected">
-                {{ product.options_by_name[option_name].values[0] }}
-              </span>
-            </div>
           </div>
           {%- if option_field contains 'Color' -%}
 
@@ -78,7 +80,7 @@
                 class="variants--radio-container"
                 data-type="{{ option_name }}"
               >
-                {%- assign option_visible = variant_selected | where: "name", option_name -%}
+                
                 {%- for option_value in product.options_by_name[option_name].values -%}
                   
                   <label
@@ -112,7 +114,7 @@
                 {%- for option_value in product.options_by_name[option_name].values -%}
                   <option 
                     value="{{ option_value }}"
-                    {% if available_value == option_value %}
+                    {% if option_value == option_visible[0].value %}
                       selected="true"
                     {% endif %}
                   >
@@ -123,20 +125,22 @@
             </div>
           {%- endif -%}
         </div>
+      {% else %}
+        {% for option_hidden_selected in variant_selected %}
+            {% if option_hidden_selected.name == option_name %}
+              <input
+                class="hidden js-option element-combination"
+                type="text"
+                name="{{ option_hidden_selected.name }}" 
+                value="{{ option_hidden_selected.value }}"
+              >
+            {% endif %}
+        {% endfor %}
       {% endif %}     
     {%- endfor -%}
   {%- endunless -%}
 
-  {% for option_hidden_selected in variant_selected %}
-      {% unless option_hidden_selected.name == option_field %}
-        <input
-          class="hidden js-option"
-          type="text"
-          name="{{ option_hidden_selected.name }}" 
-          value="{{ option_hidden_selected.value }}"
-        >
-      {% endunless %}
-  {% endfor %}
+  
 
 </div>
   

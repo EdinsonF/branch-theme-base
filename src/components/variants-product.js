@@ -51,11 +51,11 @@ function iterationOptions (parent) {
 export function selectVariant (parent) {
   let variantName = optionsChecked(parent);
   let variants = JSON.parse($Q('#variants', parent).value);
-  
+
   const variantFilter = variants.filter(
     variant => variant.title == variantName
-  )
-  
+    )
+    
   $Q('[name="id"]', parent).value = variantFilter[0].id
 }
 
@@ -96,4 +96,4 @@ export const options = (parent) =>{
  * @param {Array} options - Array of option names
  * @returns separate options with "/"
  */
-const buildOption = (options) => options.join(' / ');
+export const buildOption = (options) => options.join(' / ');

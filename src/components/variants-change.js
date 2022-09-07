@@ -1,7 +1,7 @@
 import { $Q } from "../utils/query-selector";
 import api from "../services/api"
 import { stringToHTML } from "../utils/to-html";
-import { updateCart } from "./cart";
+import { addVariantNew, updateCart } from "./cart";
 
 /**
  * Section rendering to dynamic price and available data
@@ -60,7 +60,8 @@ export const getDataVariant = async (parent) => {
 
   const variantOld = $Q('.variant_old', parent).value;
 
-  updateCart(line, 0, variantOld);
+  await updateCart(line, 0, variantOld, true);
+  await addVariantNew(varianSelect);
   
 }
 

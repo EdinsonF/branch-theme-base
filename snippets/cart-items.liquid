@@ -24,8 +24,6 @@
     {% else %}    
     {% for item in cart.items %}
 
-    <script>console.log({{ item | json }})</script>
-  
       <div
         class="cart-items__container"
         data-live-item-key="{{ item.key }}"

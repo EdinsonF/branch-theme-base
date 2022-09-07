@@ -109,6 +109,30 @@
         }
       }
     }
+
+    .variant_radio-button {
+      cursor: pointer;
+      &:hover {
+        box-shadow: 0 2px 5px rgb(0 0 0 / 30%);
+        border-radius: 50%;
+      }
+    }
+
+    .disabled-variant {
+      position: relative;
+      cursor: initial;
+
+      div::after {
+        content: " ";
+        transform: rotate(45deg);
+        position: absolute;
+        left: 10px;
+        top: 0px;
+        width: 2px;
+        height: 100%;
+        background: #a38282;
+      }
+    }
   }
 
   &-upsell {

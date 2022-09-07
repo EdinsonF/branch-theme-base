@@ -166,7 +166,6 @@ class API {
       const {
         data: html
       } = await axios.get(`${base}?variant=${variantID}`);
-      console.log("bs", html);
       return html;
     } catch (error) {
       console.error(`Error: ${error.message}`);

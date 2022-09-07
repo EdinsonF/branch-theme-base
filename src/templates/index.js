@@ -9,7 +9,7 @@ import {
   deleteItem,
   onChangeItemCart,
   openCloseCart,
-  selectVarianSideCart
+  eventSelectVarianSideCart
 } from "../components/cart";
 import { setQuantity } from "../utils/input-quantity";
 
@@ -18,7 +18,7 @@ import { openDropDown } from "../components/header";
 import { toggleDataActive } from "../utils/toggle-dataset";
 
 variantOnChange(".variants");
-selectVarianSideCart('.variant-cart');
+eventSelectVarianSideCart('.variant-cart');
 btnAddToCart(".add-product-cart");
 
 openCloseCart();
