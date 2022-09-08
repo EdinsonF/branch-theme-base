@@ -23,6 +23,9 @@
       </span>
     {% else %}    
     {% for item in cart.items %}
+
+    {% assign product_origin = all_products[item.product.handle] %}
+    {%- assign recommend_product = product_origin.metafields.custom.product_recommended_checkbox.value -%}
   
       <div
         class="cart-items__container"
@@ -50,6 +53,15 @@
             <span>
               {{ item.variant.title }}
             </span>
+
+            {% if recommend_product.variants[0].available %}
+              {% render 'recommended_product_item' 
+                recommend_product: recommend_product.variants[0]
+                cart_all: cart.items,
+                text_recommended: text_recommended
+              %}
+            {% endif %}
+
           </div>
         </div>
       

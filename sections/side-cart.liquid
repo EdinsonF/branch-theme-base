@@ -8,6 +8,7 @@
   
   {% render 'cart-items' 
     cart: cart
+    text_recommended: section.settings.text_recommended;
   %}
   
   {% render 'cart-footer'
@@ -31,6 +32,12 @@
       "id": "shipping_info",
       "label": "Shipping inf",
       "default": " Le livraison estimé : J+2/3"
+    },
+    {
+      "type": "text",
+      "id": "text_recommended",
+      "label": "Text product recommended",
+      "default": "add [title] for [price]"
     }
   ]
 }

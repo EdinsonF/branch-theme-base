@@ -89,7 +89,7 @@
 
     &__container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 2fr 1fr;
       grid-column-gap: 10px;
       --loading-color: #000;
 
@@ -106,6 +106,24 @@
 
         .item-price {
           display: flex;
+        }
+      }
+
+      input[type=number] {
+        width: 100%;
+      }
+    }
+
+    .recommended {
+      &--check {
+        display: flex;
+        align-items: flex-start;
+        margin: 8px 0;
+        cursor: pointer;
+        font-size: 14px;
+
+        input {
+          margin: 2px 5px 0;
         }
       }
     }

@@ -30,12 +30,39 @@ export const btnAddToCart = (formQuery) => {
   }
 }
 
+/**
+ * init event change add product recommended checkbox
+ */
+export const recommendedProduct = () => {
+  const elements = $Qll('.recommended');
+
+  elements.forEach(element => {
+    const checkField = $Q('input[type=checkbox]', element);
+    checkField.addEventListener('change', (event) => changeSelectCheck(event))   
+  })
+}
+
+/**
+ * change checkbox selected or no
+ * @param {event} e - event change input
+ */
+const changeSelectCheck = (e) => {
+  const idProduct = e.target.value;
+  if(e.target.checked){
+    addProducts(idProduct);
+    return;
+  }
+  const elementLine = $Q(`[data-id="${idProduct}"]`).dataset.index;
+  updateCart(elementLine, 0, `${idProduct}-${elementLine}`)
+  
+}
+
 const submitForm = (form) => {
   return form.addEventListener(
     "submit",
     (e) => {
       e.preventDefault();
-      addProducts(e);
+      prepareFormSendProduct(e)
 
       dataToggle($Q("#shopify-section-side-cart"), true);
     }
@@ -43,10 +70,10 @@ const submitForm = (form) => {
 }
 
 /**
- * Add products in cart
- * @param {event} event -Event submit from add to cart form
+ * get form  submit
+  * @param {event} event -Event submit from add to cart form
  */
-const addProducts = async (event) => {
+const prepareFormSendProduct = (event) => {
 
   let itemId = 0;
   
@@ -55,6 +82,16 @@ const addProducts = async (event) => {
       itemId = input.value;
     }
   }
+
+  addProducts(itemId);
+
+}
+
+/**
+ * Add products in cart
+ * @param {number} itemId - id product variant
+ */
+const addProducts = async (itemId) => {
 
   const cartParams = {
     items: [
