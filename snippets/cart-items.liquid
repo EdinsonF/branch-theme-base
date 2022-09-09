@@ -71,7 +71,7 @@
               {% render 'icon-remove' %}
             </span>
           </div>
-          {% unless item.variant.price == 0%}
+          {% unless item.variant.price == 0 %}
             <div class="item-quantity">
               {% render 'input-quantity' 
                 id: item.variant.id

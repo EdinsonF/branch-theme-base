@@ -13,9 +13,6 @@
     data-active-reward-three="{{ active_reward_three }}"
   >
   </div>
-  {% if condition %}
-    
-  {% endif %}
   <div class="container__reward-bar">
     <div class="container__reward-bar--progress progress-js">
     </div>
@@ -24,22 +21,20 @@
   <div 
     class="container__reward-content
     {% unless active_reward_two or  active_reward_three %}
-    center-flex
+      center-flex
     {% endunless %} 
     " 
-  >
-    
+  >   
     <div class="container__reward-content--reward">   
-        <p 
-          class="point-unique
-          {% unless active_reward_two or  active_reward_three %}
-            point-none
-          {% endunless %}
-          "
-        >
-          |
-        </p> 
-      
+      <p 
+        class="point-unique
+        {% unless active_reward_two or  active_reward_three %}
+          point-none
+        {% endunless %}
+        "
+      >
+        |
+      </p>  
       ${{ amount_reward_one }} = {{ text_reward_one }}
     </div>
     
@@ -55,6 +50,5 @@
         ${{ amount_reward_three }} = {{ text_reward_three }}
       </div>
     {% endif %}
-
   </div>
 </div>
