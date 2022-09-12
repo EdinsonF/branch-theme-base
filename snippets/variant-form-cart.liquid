@@ -3,7 +3,7 @@
 
   Accepts:
   - product - object product
-  - option_field: {String} Reference options in radio buttons. To render radio buttons include string with: 'Color'
+  - option_field: {String} Reference options in radio buttons. To render radio buttons include string with: 'Color'. only one variant. color = radio, other = select
   - variant_selected - variant current select item cart
   - index - number line item
   - variant_old - variant old select adding cart
@@ -11,7 +11,7 @@
   Usage:
   {% render 'variants-form'
     product: product,
-    option_field: 'Color Material',
+    option_field: 'Color',
     variant_selected: item.options_with_values,
     index: forloop.index,
     variant_old: item.variant.id

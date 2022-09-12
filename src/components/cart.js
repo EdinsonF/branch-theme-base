@@ -171,7 +171,6 @@ const addProducts = async (event) => {
   updateCartItems(sections["side-cart"]);
   updateCartbutton(sections["side-cart"]);
   updatetotalPrice(sections["side-cart"]);
-  eventSelectVarianSideCart('.variant-cart');
 }
 
 export const addVariantNew = async (itemId) => {
@@ -191,7 +190,6 @@ export const addVariantNew = async (itemId) => {
   updateCartItems(sections["side-cart"]);
   updateCartbutton(sections["side-cart"]);
   updatetotalPrice(sections["side-cart"]);
-  eventSelectVarianSideCart('.variant-cart');
 
 }
 
@@ -237,12 +235,11 @@ export const updateCart = async (line, quantity, id, changeVariant) => {
     updateCartItems(sections["side-cart"]);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
-    eventSelectVarianSideCart('.variant-cart');
   } else {
+    updateCartItems(sections["side-cart"]);
     updatePriceItem(sections["side-cart"], id);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
-    eventSelectVarianSideCart('.variant-cart');
   }
 }
 

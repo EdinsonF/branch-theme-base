@@ -1,7 +1,7 @@
 import { stringToHTML } from '../utils/to-html';
 import { $Q, $Qll } from '../utils/query-selector';
 import { setQuantity } from "../utils/input-quantity";
-import { deleteItem, onChangeItemCart } from "./cart";
+import { deleteItem, eventSelectVarianSideCart, onChangeItemCart } from "./cart";
 
 /**
  * Update cart items section in sidecart
@@ -21,6 +21,7 @@ export const updateCartItems = (str) => {
   setQuantity();
   deleteItem();
   onChangeItemCart();
+  eventSelectVarianSideCart('.variant-cart');
 }
 
 /**
