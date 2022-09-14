@@ -5,102 +5,25 @@ import {
   updateCartItems,
   updatetotalPrice,
   updateCartbutton,
-  updatePriceItem
+  updatePriceItem,
 } from "./update-cart";
 
 const CART_SECTION = "side-cart,cart-page";
 
 /**
- * Listen if add to cart form is submited
- * if add to cart form is submited add products in cart
- * 
- * @param {string} formQuery - className reference in form add-to-cart
- * 
- * To active this feature - ADD className 'add-cart-js' in form product
- * */
-export const btnAddToCart = (formQuery) => {
-  const addForms = $Qll(formQuery);
-
-  if(addForms != null) {
-    addForms.forEach(
-      form => {
-        submitForm(form);
-      }
-    )
-  }
-}
-
-/**
- * init event change add product recommended checkbox
- */
-export const recommendedProduct = () => {
-  const elements = $Qll('.recommended');
-
-  elements.forEach(element => {
-    const checkField = $Q('input[type=checkbox]', element);
-    checkField.addEventListener('change', (event) => changeSelectCheck(event))   
-  })
-}
-
-/**
- * change checkbox selected or no
- * @param {event} e - event change input
- */
-const changeSelectCheck = (e) => {
-  const idProduct = e.target.value;
-  if(e.target.checked){
-    addProducts(idProduct);
-    return;
-  }
-  const elementLine = $Q(`[data-id="${idProduct}"]`).dataset.index;
-  updateCart(elementLine, 0, `${idProduct}-${elementLine}`)
-  
-}
-
-const submitForm = (form) => {
-  return form.addEventListener(
-    "submit",
-    (e) => {
-      e.preventDefault();
-      prepareFormSendProduct(e)
-
-      dataToggle($Q("#shopify-section-side-cart"), true);
-    }
-  )
-}
-
-/**
- * get form  submit
-  * @param {event} event -Event submit from add to cart form
- */
-const prepareFormSendProduct = (event) => {
-
-  let itemId = 0;
-  
-  for(const input of event.target) {
-    if(input.name === "id"){
-      itemId = input.value;
-    }
-  }
-
-  addProducts(itemId);
-
-}
-
-/**
  * Add products in cart
  * @param {number} itemId - id product variant
  */
-const addProducts = async (itemId) => {
+ const addProducts = async (itemId) => {
 
   const cartParams = {
     items: [
       {
         id: itemId,
         quantity: 1,
-      }
+      },
     ],
-    sections: CART_SECTION
+    sections: CART_SECTION,
   };
 
   const { sections = null } = await api.addToCart(cartParams);
@@ -112,20 +35,60 @@ const addProducts = async (itemId) => {
 }
 
 /**
- * Event onChange in the cart item
+ * get form  submit
+  * @param {event} event -Event submit from add to cart form
  */
+ const prepareFormSendProduct = (event) => {
 
-export const onChangeItemCart = () => {
-  $Qll('.item-cart-js').forEach(
-    input => {
-      input.addEventListener(
-        'change',
-        function () {
-          updateCart(this.dataset.index, this.value, this.id);
-        }
-      )
+  let itemId = 0;
+
+  for (const input of event.target) {
+    if (input.name === "id") {
+      itemId = input.value;
     }
+  }
+
+  addProducts(itemId);
+}
+
+const submitForm = (form) => (
+  form.addEventListener(
+    "submit",
+    (e) => {
+      e.preventDefault();
+      prepareFormSendProduct(e)
+
+      dataToggle($Q("#shopify-section-side-cart"), true);
+    },
   )
+)
+
+/**
+ * Listen if add to cart form is submited
+ * if add to cart form is submited add products in cart
+ *
+ * @param {string} formQuery - className reference in form add-to-cart
+ *
+ * To active this feature - ADD className 'add-cart-js' in form product
+ * */
+export const btnAddToCart = (formQuery) => {
+  const addForms = $Qll(formQuery);
+
+  if (addForms != null) {
+    addForms.forEach(
+      (form) => {
+        submitForm(form);
+      },
+    )
+  }
+}
+
+/**
+ * Replace en element with a spinner
+ * @param {String} element
+ */
+ const addSpinner = (element) => {
+  $Q(element).innerHTML = '<div class="loading"></div>';
 }
 
 /**
@@ -133,9 +96,9 @@ export const onChangeItemCart = () => {
  * @param {number} id Product ID
  * @param {number} quantity new quantity
  */
-export const updateCart = async (line, quantity, id) => {
+ export const updateCart = async (line, quantity, id) => {
   addSpinner(`#price-${id}`);
-  
+
   const cartParams = {
     line,
     quantity,
@@ -143,7 +106,7 @@ export const updateCart = async (line, quantity, id) => {
   }
 
   const { sections = null } = await api.changeCart(cartParams);
-  
+
   if (!sections) return null;
 
   if (quantity === 0) {
@@ -158,13 +121,49 @@ export const updateCart = async (line, quantity, id) => {
 }
 
 /**
- * Replace en element with a spinner
- * @param {String} element 
+ * change checkbox selected or no
+ * @param {event} e - event change input
  */
- const addSpinner = (element) => {
-  $Q(element).innerHTML = '<div class="loading"></div>';
+ const changeSelectCheck = (e) => {
+  const idProduct = e.target.value;
+  if (e.target.checked) {
+    addProducts(idProduct);
+    return;
+  }
+  const elementLine = $Q(`[data-id="${idProduct}"]`).dataset.index;
+  updateCart(elementLine, 0, `${idProduct}-${elementLine}`)
+
 }
 
+/**
+ * init event change add product recommended checkbox
+ */
+export const recommendedProduct = () => {
+  const elements = $Qll('.recommended');
+
+  elements.forEach((element) => {
+    const checkField = $Q('input[type=checkbox]', element);
+    checkField.addEventListener('change',
+    (event) => changeSelectCheck(event))
+  })
+}
+
+/**
+ * Event onChange in the cart item
+ */
+
+export const onChangeItemCart = () => {
+  $Qll('.item-cart-js').forEach(
+    (input) => {
+      input.addEventListener(
+        'change',
+        function () {
+          updateCart(this.dataset.index, this.value, this.id);
+        },
+      )
+    },
+  )
+}
 
 /**
  * Delete item in cart
@@ -176,19 +175,18 @@ export const deleteItem = () => {
 
   if (deleteIcon) {
     deleteIcon.forEach(
-      element => {
+      (element) => {
         const { dataset: { id, index } } = element;
         element.addEventListener(
           "click",
           () => {
             updateCart(index, 0, `${id}-${index}`)
-          }
+          },
         )
-      }
+      },
     );
   }
 }
-
 
 /**
 * Open and close side cart with various buttons
@@ -200,12 +198,12 @@ export const openCloseCart = () => {
   toggleDataActive(
     ".cart-close",
     "#shopify-section-side-cart",
-    { overlay: true }
+    { overlay: true },
   )
 
   toggleDataActive(
     ".button-cart",
     "#shopify-section-side-cart",
-    { overlay: true }
+    { overlay: true },
   )
 }

@@ -9,7 +9,7 @@ import {
   deleteItem,
   onChangeItemCart,
   openCloseCart,
-  recommendedProduct
+  recommendedProduct,
 } from "../components/cart";
 import { setQuantity } from "../utils/input-quantity";
 
@@ -29,4 +29,3 @@ onChangeItemCart();
 openAccordion();
 openDropDown();
 toggleDataActive("#burger-nav-js", "#nav-list-js");
-

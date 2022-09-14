@@ -1,13 +1,13 @@
 {% comment %}
   Render checkbox add product recommended
-  
+
   Accepts:
   - recommend_product: {Object} object product current variant
   - cart_all : {Array} array cart item
   - text_recommended: {String} text customize for product recommende
-  
+
   Usage:
-  {% render 'recommended_product_item' 
+  {% render 'recommended_product_item'
     recommend_product: recommend_product.variants[0]
     cart_all: cart.items,
     text_recommended: text_recommended
@@ -15,16 +15,16 @@
 {% endcomment %}
 
 {% assign price = recommend_product.price | money %}
-{% 
+{%
   assign text_replace = text_recommended 
   | replace: '[title]', recommend_product.product.title 
   | replace: '[price]',  price
 %}
 <label class="recommended">
   <div class="recommended--check">
-    <input 
-      type="checkbox" 
-      name="check-product" 
+    <input
+      type="checkbox"
+      name="check-product"
       value="{{ recommend_product.id }}"
       {% for item in cart_all %}
         {% if item.id == recommend_product.id %}
