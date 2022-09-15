@@ -17,20 +17,19 @@
   {% assign limit_price = amount_reward_two %}
 {% endif %}
 
-
 <div class="cart-wrapper">
   {% render 'cart-header'
     title: cart_title,
   %}
-  
-  {% render 'cart-items' 
+
+  {% render 'cart-items'
     cart: cart
   %}
 
-  <div id="is-show-rewards" data-active-rewards={{ active_rewards }}></div>
+  <div id="is-show-rewards" data-active-rewards="{{ active_rewards }}"></div>
   {% if active_rewards %}
     {% render 'cart-bar-rewards'
-      active_reward_two: active_reward_two, 
+      active_reward_two: active_reward_two,
       active_reward_three: active_reward_three,
       amount_reward_one: amount_reward_one,
       discount_reward_one: section.settings.discount_reward_one,
@@ -45,8 +44,7 @@
       cart_total: cart_total
     %}
   {% endif %}
-  
-  
+
   {% render 'cart-footer'
     cart: cart,
     shipping_info: section.settings.shipping_info,
@@ -83,11 +81,11 @@
       "label": "Show rewards",
       "default": true
     },
-    { 
-    "type": "number",
-    "id": "amount_reward_one",
-    "label": "limit amount product one",
-    "default": 20
+    {
+      "type": "number",
+      "id": "amount_reward_one",
+      "label": "limit amount product one",
+      "default": 20
     },
     {
       "type": "text",

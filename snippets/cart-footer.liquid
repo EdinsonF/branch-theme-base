@@ -1,6 +1,5 @@
 {% comment %}
   Render footer in cart
-  
   Accepts:
   - cart: {Object} cart object
   - shipping_info: {String} shipping info in cart
@@ -23,7 +22,7 @@
         id="cart-footer__button"
       >
         {% capture content_button %}
-          {{ "sections.cart.checkout" | t }} 
+          {{ "sections.cart.checkout" | t }}
           <span id="total-price">
             {{ cart.total_price | money }}
           </span>
@@ -32,9 +31,9 @@
         <form action="/checkout">
           <input 
             id="code-discount"
-            type="hidden" 
-            name="discount" 
-            value="" 
+            type="hidden"
+            name="discount"
+            value=""
             class="discount-checkout"
           >
 
@@ -48,9 +47,9 @@
                 action: "submit"
               %}
             {% endif %}
-          </div>   
-          
-        </form> 
+          </div>
+
+        </form>
       </div>
     </div>
 </div>
