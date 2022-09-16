@@ -2,7 +2,7 @@ import { stringToHTML } from '../utils/to-html';
 import { $Q, $Qll } from '../utils/query-selector';
 import { setQuantity } from "../utils/input-quantity";
 import { deleteItem, onChangeItemCart } from "./cart";
-import { barProgressReward } from '../utils/bar-reward';
+import { barProgressReward } from './bar-reward';
 
 /**
  * Update cart items section in sidecart
@@ -11,12 +11,13 @@ import { barProgressReward } from '../utils/bar-reward';
 export const updateCartItems = (str) => {
   $Qll('.cartitems-js')
     .forEach(
-      element => {
-        element.innerHTML = $Q(
+      (element) => {
+        const elementRef = element;
+        elementRef.innerHTML = $Q(
           '#cart-items',
-          stringToHTML(str)
+          stringToHTML(str),
         ).outerHTML;
-      }
+      },
     )
 
   setQuantity();
@@ -31,25 +32,41 @@ export const updateCartItems = (str) => {
  export const updateCartbutton = (str) => {
 
   const inputBarReward = $Q('#data-reward', stringToHTML(str));
-      
+
   const btnContainer = $Q('.cart-footer', stringToHTML(str));
   const domBtnContainer = $Qll('#container-footer-js');
 
   barProgressReward(inputBarReward);
-  
+
   if (btnContainer) {
 
-    domBtnContainer.forEach( element => {
-      element.innerHTML = btnContainer.outerHTML;
+    domBtnContainer.forEach((element) => {
+      const elementRef = element;
+      elementRef.innerHTML = btnContainer.outerHTML;
     })
 
     return;
   }
 
-  domBtnContainer.forEach( element => {
-    element.innerHTML = '';
+  domBtnContainer.forEach((element) => {
+    const elementRef = element;
+    elementRef.innerHTML = '';
   })
-  
+}
+
+/**
+ * Chance all input value only cart page
+ *
+ * @param {String} id - Variant id item cart
+ * @param {String} quantity - Quantity variant by item cart
+ */
+ const updateOnCartPage = (id, quantity) => {
+  $Qll(`.item-cart-js[id="${id}"]`).forEach(
+    (element) => {
+      const elementRef = element;
+      elementRef.value = quantity;
+    },
+  )
 }
 
 /**
@@ -65,22 +82,13 @@ export const updatePriceItem = (str, id) => {
   } = $Q(`#price-${id}`, stringToHTML(str));
 
   $Qll(`.price-${id}`).forEach(
-    element => element.innerHTML = outerText
+    (element) => {
+      const elementRef = element;
+      elementRef.innerHTML = outerText
+    },
   )
 
-  $Q('#cart-page') && updateOnCartPage(id, dataset.quantity);
-}
-
-/**
- * Chance all input value only cart page
- * 
- * @param {String} id - Variant id item cart
- * @param {String} quantity - Quantity variant by item cart
- */
- const updateOnCartPage = (id, quantity) => {
-  $Qll(`.item-cart-js[id="${id}"]`).forEach(
-    element => element.value = quantity
-  )
+  if ($Q('#cart-page')) updateOnCartPage(id, dataset.quantity);
 }
 
 /**
@@ -89,15 +97,16 @@ export const updatePriceItem = (str, id) => {
  */
  export const updatetotalPrice = (str) => {
 
-  if(!$Q("#total-price", stringToHTML(str))){
+  if (!$Q('.cartpage-footer')) return;
+  if (!$Q("#total-price", stringToHTML(str))) {
     $Q('.cartpage-footer').style.display = 'none';
     return;
   }
 
   if ($Q(".cartpage-footer__info--price") != null) {
-    return $Q(".cartpage-footer__info--price").innerHTML = $Q(
+    $Q(".cartpage-footer__info--price").innerHTML = $Q(
       "#total-price",
-      stringToHTML(str)
+      stringToHTML(str),
     ).outerText;
   }
 }
