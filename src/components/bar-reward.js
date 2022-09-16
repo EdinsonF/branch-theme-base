@@ -87,7 +87,8 @@ const isRewardOneOrTwoActive = (
 ) => {
 
   if ((activeRewardOne === 'true' && activeRewardTwo === 'false')
-    || (activeRewardOne === 'false' && activeRewardTwo === 'true')) {
+    ||
+    (activeRewardOne === 'false' && activeRewardTwo === 'true')) {
       return isRewardOneOrTwoActive(
         activeRewardOne,
         limitProductOne,
@@ -237,11 +238,48 @@ const objectDataRewards = () => {
   }
 }
 
+/**
+ * add product reward or deleted in cart
+ * @param {boolean} conditional - true or false
+ * @param {number} id_product - id product current
+ */
+ const productRewardSend = async (itemsIds) => {
+
+  await addRewardProduct(itemsIds)
+}
+
+const deletedProductReward = async (itemsIds) => {
+
+await addRewardProduct(itemsIds)
+}
+
 const getDataProximity = (objectArr, totalPrice) => (
    objectArr.reverse().find(
     (element) => element < totalPrice)
 )
 
+const addRewardTwo = (data) => {
+  if (!$Q(`[data-id='${data[1][1]}']`)) {
+    productRewardSend({[data[1][0]]: 1, [data[1][1]]: 1});
+  }
+}
+
+const addRewardOne = (data) => {
+  if (!$Q(`[data-id='${data[1][0]}']`)) {
+    productRewardSend({[data[1][0]]: 1});
+  }
+  if ($Q(`[data-id='${data[2][1]}']`)) {
+    deletedProductReward({[data[2][1]]: 0});
+  }
+}
+
+const evalDeleteRewards = (data) => {
+  if ($Q(`[data-id='${data[2][1]}']`)) {
+    deletedProductReward({[data[1][0]]: 0, [data[1][1]]: 0});
+  } else if ($Q(`[data-id='${data[2][0]}']`)) {
+    deletedProductReward({[data[1][0]]: 0});
+  }
+}
 /**
  * eval product add or deleted if exist
  * @param {array} data - info reward current
@@ -249,39 +287,25 @@ const getDataProximity = (objectArr, totalPrice) => (
  */
  const evalAddProduct = (data, totalPrice) => {
 
-  if(totalPrice >= data[0]) {
+  const validateAddRewards = {
+    2: addRewardTwo,
+    1: addRewardOne,
+  }
+  if (totalPrice >= data[0]) {
 
-    if(data[1].length === 2 ){
-  
-      if(!$Q(`[data-id='${data[1][1]}']`)){
-        productRewardSend({[data[1][0]]: 1, [data[1][1]]: 1});
-      }
-    }else if (data[1].length === 1){
-    
-      if(!$Q(`[data-id='${data[1][0]}']`)){
-        productRewardSend({[data[1][0]]: 1});
-      }
-      if($Q(`[data-id='${data[2][1]}']`)){
-        deletedProductReward({[data[2][1]]: 0});
-      }
-    }
+    validateAddRewards[data[1].length](data);
   }
 
-  if(totalPrice < data[0]){
-
-    if($Q(`[data-id='${data[2][1]}']`)){
-        deletedProductReward({[data[1][0]]: 0, [data[1][1]]: 0});
-      }else if ($Q(`[data-id='${data[2][0]}']`)){
-        deletedProductReward({[data[1][0]]: 0});
-      }
+  if (totalPrice < data[0]) {
+    evalDeleteRewards(data);
   }
 }
 
-/**
- * validate object rewards for add product cart
- * @param {number} totalPrice - total cart
- */
- const validateProductsRewards = (totalPrice) => {
+const evalAddOrDeleteRewards = (
+  totalPrice,
+  dataProximity,
+  objectProduct,
+) => {
 
   const {
     limitProductOne,
@@ -289,14 +313,6 @@ const getDataProximity = (objectArr, totalPrice) => (
     activeRewardOne,
     activeRewardTwo,
   } = getDataAll();
-
-  const objectProduct = objectDataRewards();
-
-  const objectArr = Object.keys(objectProduct);
-
-  const dataProximity = getDataProximity(objectArr, totalPrice)
-
-  if (objectArr.length < 2) return;
 
   const rewardsMin = activeRewardOne === 'true'
     ? limitProductOne
@@ -319,6 +335,27 @@ const getDataProximity = (objectArr, totalPrice) => (
     );
     evalAddProduct(objectProduct[limitProductLast], totalPrice);
   }
+}
+
+/**
+ * validate object rewards for add product cart
+ * @param {number} totalPrice - total cart
+ */
+ const validateProductsRewards = (totalPrice) => {
+
+  const objectProduct = objectDataRewards();
+
+  const objectArr = Object.keys(objectProduct);
+
+  const dataProximity = getDataProximity(objectArr, totalPrice)
+
+  if (objectArr.length < 2) return;
+
+  evalAddOrDeleteRewards(
+    totalPrice,
+    dataProximity,
+    objectProduct,
+  );
 }
 
 /**
@@ -350,18 +387,3 @@ export const barProgressReward = (input) => {
 const calculatePercentageBefore = (limit, breakPoint) => (
   ((parseFloat(limit) / 100) / breakPoint) * 100
 )
-
-/**
- * add product reward or deleted in cart
- * @param {boolean} conditional - true or false
- * @param {number} id_product - id product current
- */
-const productRewardSend = async (itemsIds) => {
-
-    await addRewardProduct(itemsIds)
-}
-
-const deletedProductReward = async (itemsIds) => {
-
-  await addRewardProduct(itemsIds)
-}
