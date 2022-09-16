@@ -87,11 +87,6 @@ const getPercentageBefore = ({totalPrice,
   }
     return 100;
 
-  //evalConditionBreak[]
-
-   /* {
-    return 100;
-  } */
 }
 
 const percentageOne = ({
