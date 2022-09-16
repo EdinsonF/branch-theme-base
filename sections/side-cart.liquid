@@ -16,18 +16,17 @@
   {% assign limit_price = amount_reward_two %}
 {% endif %}
 
-
 <div class="cart-wrapper">
   {% render 'cart-header'
     title: cart_title,
   %}
-  
-  {% render 'cart-items' 
+
+  {% render 'cart-items'
     cart: cart
   %}
 
   {% render 'cart-bar-rewards'
-    active_reward_two: active_reward_two, 
+    active_reward_two: active_reward_two,
     active_reward_three: active_reward_three,
     amount_reward_one: amount_reward_one,
     product_reward_one: section.settings.product_reward_one,
@@ -41,7 +40,7 @@
     limit_price: limit_price,
     cart_total: cart_total
   %}
-  
+
   {% render 'cart-footer'
     cart: cart,
     shipping_info: section.settings.shipping_info,
@@ -72,11 +71,11 @@
       "type": "header",
       "content": "Gift products"
     },
-    { 
-    "type": "number",
-    "id": "amount_reward_one",
-    "label": "limit amount product one",
-    "default": 10
+    {
+      "type": "number",
+      "id": "amount_reward_one",
+      "label": "limit amount product one",
+      "default": 10
     },
     {
       "type": "text",
