@@ -21,21 +21,121 @@ import { $Q } from '../utils/query-selector'
   }
 }
 
+/**
+ * calculate percentage before break rewards
+ * @param {number} limit - limit break reward price
+ * @param {number} breakPoint - value break point dots
+ */
+ const calculatePercentageBefore = (limit, breakPoint) => (
+  ((parseFloat(limit) / 100) / breakPoint) * 100
+)
 
-const getPercentageBefore = (
+const breakOne = ({totalPrice, limitFreeShipping}) => {
+
+  if (totalPrice <= limitFreeShipping) {
+    return calculatePercentageBefore(limitFreeShipping, 13);
+  }
+}
+
+const breackTwo = ({totalPrice, limitFreeShipping, limitProductOne}) => {
+
+  if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne) {
+    return calculatePercentageBefore(limitProductOne, 50);
+  }
+}
+
+const breakThree = ({
+  totalPrice,
+  limitProductOne,
+  limitProductTwo,
+}) => {
+
+  if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
+    return calculatePercentageBefore(limitProductTwo, 88);
+  }
+}
+
+const getPercentageBefore = ({totalPrice,
+  limitFreeShipping,
+  limitProductOne,
+  limitDiscountLast,
+}) => {
+
+  const evalConditionBreak = {
+    13: breakOne,
+    50: breackTwo,
+    88: breakThree,
+  }
+
+  const keyArr = Object.keys(evalConditionBreak);
+
+  const elementResult = keyArr.map((element) => {
+  const rs = evalConditionBreak[element]({totalPrice,
+    limitFreeShipping,
+    limitProductOne,
+    limitDiscountLast,
+  })
+
+    return rs;
+  })
+
+  const valorPercentage = elementResult.filter(
+    (element) => element > 0)
+
+  if (valorPercentage.length > 0) {
+    return valorPercentage[0]
+  }
+    return 100;
+
+  //evalConditionBreak[]
+
+   /* {
+    return 100;
+  } */
+}
+
+const percentageOne = ({
   totalPrice,
   limitFreeShipping,
   limitProductOne,
-  limitProductTwo,
-) => {
+  percentageAfter,
+}) => {
+  if (
+    (totalPrice > limitFreeShipping)
+    &&
+    (totalPrice <= limitProductOne)
+    &&
+    (percentageAfter < 13)) {
+     return 20;
+  }
 
-  if (totalPrice <= limitFreeShipping){
-    return calculatePercentageBefore(limitFreeShipping, 13);
-  } else if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne) {
-    return calculatePercentageBefore(limitProductOne, 50); 
-  } else if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
-    return calculatePercentageBefore(limitProductTwo, 88); 
-  }else {
+}
+
+const percentageTwo = ({
+  totalPrice,
+  limitProductOne,
+  percentageAfter,
+  limitProductTwo,
+}) => {
+  if (
+    (totalPrice > limitProductOne)
+    &&
+    (totalPrice < limitProductTwo)
+    &&
+    (percentageAfter < 50)) {
+     return 53;
+  }
+}
+
+const percentageThree = ({
+  totalPrice,
+  percentageAfter,
+  limitProductTwo,
+}) => {
+  if (
+    (totalPrice >= limitProductTwo)
+    &&
+    (percentageAfter < 88)) {
     return 100;
   }
 }
@@ -46,19 +146,37 @@ const getPercentageBefore = (
  * @param {number} totalPrice - price cart total
  * @param {number} limitProductTwo - limit product two rewards
  */
- const calculatePercentageAfter = (percentageAfter, totalPrice, limitProductTwo) => {
+ const calculatePercentageAfter = (
+  percentageAfter,
+  totalPrice,
+  limitProductTwo,
+) => {
 
-  let {
+  const {
     limitFreeShipping,
-    limitProductOne
+    limitProductOne,
   } = getDataAll();
- 
-  if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne && percentageAfter < 13) {
-    percentageAfter = 20;
-  }else if (totalPrice > limitProductOne && totalPrice < limitProductTwo && percentageAfter < 50) {
-    percentageAfter = 53;
-  } else if (totalPrice >= limitProductTwo && percentageAfter < 88) {  
-    percentageAfter = 100;
+
+  const evalConditionPercentage = {
+    20: percentageOne,
+    53: percentageTwo,
+    100: percentageThree,
+  }
+
+  const keyObject = Object.keys(evalConditionPercentage);
+
+  const resultPercentage = keyObject.filter(
+    (element) => evalConditionPercentage[element]({
+      totalPrice,
+      limitFreeShipping,
+      limitProductOne,
+      percentageAfter,
+      limitProductTwo,
+    }),
+  )
+
+  if (resultPercentage.length > 0) {
+    return resultPercentage[0]
   }
 
   return percentageAfter;
@@ -79,12 +197,12 @@ const isRewardOneOrTwoActive = (
  * @param {number} limitProductOne - limit product one
  * @param {number} limitProductTwo - limit product two
  */
- const productsIsRewardsActive = (
+ const productsIsRewardsActive = ({
   activeRewardOne,
   activeRewardTwo,
   limitProductOne,
   limitProductTwo,
-) => {
+}) => {
 
   if ((activeRewardOne === 'true' && activeRewardTwo === 'false')
     ||
@@ -150,18 +268,19 @@ const calculateMoreOneRewards = (
   totalPrice,
 ) => {
 
-  const limitDiscountLast = productsIsRewardsActive(
+  const limitDiscountLast = productsIsRewardsActive({
     activeRewardOne,
     activeRewardTwo,
     limitProductOne,
-    limitProductTwo);
+    limitProductTwo,
+  });
 
-  const percentageBefore = getPercentageBefore(
+  const percentageBefore = getPercentageBefore({
     totalPrice,
     limitFreeShipping,
     limitProductOne,
     limitDiscountLast,
-  )
+  })
 
   const percentageAfter = totalPrice / percentageBefore;
   const totalBar = calculatePercentageAfter(
@@ -316,23 +435,24 @@ const evalAddOrDeleteRewards = (
 
   const rewardsMin = activeRewardOne === 'true'
     ? limitProductOne
-    : productsIsRewardsActive(
-      activeRewardOne,
-      activeRewardTwo,
-      limitProductOne,
-      limitProductTwo);
+    : productsIsRewardsActive({
+        activeRewardOne,
+        activeRewardTwo,
+        limitProductOne,
+        limitProductTwo,
+      });
 
   if (totalPrice >= rewardsMin) {
      if (dataProximity) {
       evalAddProduct(objectProduct[dataProximity], totalPrice);
      }
   } else {
-    const limitProductLast = productsIsRewardsActive(
+    const limitProductLast = productsIsRewardsActive({
       activeRewardOne,
       activeRewardTwo,
       limitProductOne,
       limitProductTwo,
-    );
+    });
     evalAddProduct(objectProduct[limitProductLast], totalPrice);
   }
 }
@@ -378,12 +498,3 @@ export const barProgressReward = (input) => {
     progressContainer.style.width = `${barWidth}%`;
   }
 }
-
-/**
- * calculate percentage before break rewards
- * @param {number} limit - limit break reward price
- * @param {number} breakPoint - value break point dots
- */
-const calculatePercentageBefore = (limit, breakPoint) => (
-  ((parseFloat(limit) / 100) / breakPoint) * 100
-)
