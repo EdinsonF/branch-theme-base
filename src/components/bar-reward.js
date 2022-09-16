@@ -47,7 +47,7 @@ const breackTwo = ({totalPrice, limitFreeShipping, limitProductOne}) => {
 const breakThree = ({
   totalPrice,
   limitProductOne,
-  limitProductTwo,
+  limitDiscountLast: limitProductTwo,
 }) => {
 
   if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
