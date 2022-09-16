@@ -2,7 +2,7 @@ import { stringToHTML } from '../utils/to-html';
 import { $Q, $Qll } from '../utils/query-selector';
 import { setQuantity } from "../utils/input-quantity";
 import { deleteItem, onChangeItemCart } from "./cart";
-import { barProgressReward } from '../utils/bar-reward';
+import { barProgressReward } from './bar-reward';
 
 /**
  * Update cart items section in sidecart

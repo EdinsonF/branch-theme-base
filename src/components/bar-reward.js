@@ -1,4 +1,4 @@
-import { $Q } from './query-selector'
+import { $Q } from "../utils/query-selector";
 
 /* get all data dom */
 const getDataAll = () => {
@@ -19,21 +19,121 @@ const getDataAll = () => {
   }
 }
 
-const getPercentageBefore = (
-  totalPrice,
-  limitDiscountOne,
-  limitDiscountTwo,
-  limitDiscountThree,
-) => {
-  /* all rewards */  
+/**
+ * calculate percentage before break rewards
+ * @param {number} limit - limit break reward price
+ * @param {number} breakPoint - value break point dots
+ */
+ const calculatePercentageBefore = (limit, breakPoint) => (
+  ((parseFloat(limit) / 100) / breakPoint) * 100
+)
+
+const percentageBeforeOne = ({totalPrice, limitDiscountOne}) => {
 
   if (totalPrice <= limitDiscountOne) {
     return calculatePercentageBefore(limitDiscountOne, 13);
-  } else if ((totalPrice > limitDiscountOne) && (totalPrice <= limitDiscountTwo)) {
+  }
+}
+
+const percentageBeforeTwo = ({
+  totalPrice,
+  limitDiscountOne,
+  limitDiscountTwo,
+}) => {
+
+  if ((totalPrice > limitDiscountOne) && (totalPrice <= limitDiscountTwo)) {
     return calculatePercentageBefore(limitDiscountTwo, 50);
-  } else if ((totalPrice > limitDiscountTwo) && (totalPrice < limitDiscountThree)) {
-    return calculatePercentageBefore(limitDiscountThree, 88); 
-  } else {
+  }
+}
+
+const percentageBeforeThree = ({
+  totalPrice,
+  limitDiscountTwo,
+  limitDiscountLast: limitDiscountThree,
+}) => {
+
+  if ((totalPrice > limitDiscountTwo) && (totalPrice < limitDiscountThree)) {
+    return calculatePercentageBefore(limitDiscountThree, 88);
+  }
+}
+
+const getPercentageBefore = ({
+  totalPrice,
+  limitDiscountOne,
+  limitDiscountTwo,
+  limitDiscountLast,
+}) => {
+  /* all rewards */
+
+    const evalPercentageBefore = {
+      13: percentageBeforeOne,
+      50: percentageBeforeTwo,
+      88: percentageBeforeThree,
+    }
+
+    const keyArr = Object.keys(evalPercentageBefore);
+
+    const elementResult = keyArr.map((element) => {
+    const rs = evalPercentageBefore[element]({
+      totalPrice,
+      limitDiscountOne,
+      limitDiscountTwo,
+      limitDiscountLast,
+    })
+
+      return rs;
+    })
+
+    const valorPercentage = elementResult.filter(
+      (element) => element > 0)
+
+    if (valorPercentage.length > 0) {
+      return valorPercentage[0]
+    }
+      return 100;
+
+}
+
+const percentageAfterOne = ({
+  totalPrice,
+  limitDiscountOne,
+  limitDiscountTwo,
+  percentageAfter,
+}) => {
+
+  if (
+    (totalPrice > limitDiscountOne)
+    &&
+    (totalPrice <= limitDiscountTwo)
+    &&
+    (percentageAfter < 13)) {
+    return 20;
+  }
+
+}
+
+const percentageAfterTwo = ({
+  totalPrice,
+  limitDiscountTwo,
+  percentageAfter,
+  limitDiscountThree,
+}) => {
+  if (
+    (totalPrice > limitDiscountTwo)
+    &&
+    (totalPrice < limitDiscountThree)
+    &&
+    (percentageAfter < 50)) {
+    return 53;
+  }
+}
+
+const percentageAfterThree = ({
+  totalPrice,
+  percentageAfter,
+  limitDiscountThree,
+}) => {
+  if ((totalPrice >= limitDiscountThree) && (percentageAfter < 88)) {
     return 100;
   }
 }
@@ -50,17 +150,31 @@ const getPercentageBefore = (
   limitDiscountThree,
 ) => {
 
-  let {
+  const {
     limitDiscountOne,
-    limitDiscountTwo
+    limitDiscountTwo,
   } = getDataAll();
- 
-  if ((totalPrice > limitDiscountOne) && (totalPrice <= limitDiscountTwo) && (percentageAfter < 13)) {
-    percentageAfter = 20;
-  }else if ((totalPrice > limitDiscountTwo) && (totalPrice < limitDiscountThree) && (percentageAfter < 50)) {
-    percentageAfter = 53;
-  } else if ((totalPrice >= limitDiscountThree) && (percentageAfter < 88)) {  
-    percentageAfter = 100;
+
+  const evalPercentageAfter = {
+    20: percentageAfterOne,
+    53: percentageAfterTwo,
+    100: percentageAfterThree,
+  }
+
+  const keyObject = Object.keys(evalPercentageAfter);
+
+  const resultPercentage = keyObject.filter(
+    (element) => evalPercentageAfter[element]({
+      totalPrice,
+      limitDiscountOne,
+      percentageAfter,
+      limitDiscountTwo,
+      limitDiscountThree,
+    }),
+  )
+
+  if (resultPercentage.length > 0) {
+    return resultPercentage[0]
   }
 
   return percentageAfter;
@@ -123,12 +237,12 @@ const calculateMoreOneRewards = (
     limitDiscountThree,
   });
 
-  const percentageBefore = getPercentageBefore(
+  const percentageBefore = getPercentageBefore({
     totalPrice,
     limitDiscountOne,
     limitDiscountTwo,
     limitDiscountLast,
-  );
+  });
 
   const percentageAfter = totalPrice / percentageBefore;
   const totalBar = calculatePercentageAfter(
@@ -306,12 +420,3 @@ export const barProgressReward = (input) => {
     progressContainer.style.width = `${barWidth}%`;
   }
 }
-
-/**
- * calculate percentage before break rewards
- * @param {number} limit - limit break reward price
- * @param {number} breakPoint - value break point dots
- */
-const calculatePercentageBefore = (limit, breakPoint) => (
-  ((parseFloat(limit) / 100) / breakPoint) * 100
-)

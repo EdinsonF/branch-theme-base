@@ -1,5 +1,5 @@
 import api from "../services/api";
-import { barProgressReward } from "../utils/bar-reward";
+import { barProgressReward } from "./bar-reward";
 import { $Q, $Qll } from "../utils/query-selector";
 import { dataToggle, toggleDataActive } from "../utils/toggle-dataset";
 import {
