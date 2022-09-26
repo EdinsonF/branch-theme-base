@@ -112,7 +112,7 @@ export const addRewardProduct = async (itemsIds) => {
 
   if (!sections) return null;
 
-  if (quantity === 0) {
+  if (Number(quantity) === 0) {
     updateCartItems(sections["side-cart"]);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
