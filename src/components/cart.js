@@ -38,6 +38,8 @@ const CART_SECTION = "side-cart,cart-page";
   const { sections = null } = await api.addToCart(cartParams);
   if (!sections) return null;
 
+  dataToggle($Q("#shopify-section-side-cart"), true);
+
   updateCartItems(sections["side-cart"]);
   updateCartbutton(sections["side-cart"]);
   updatetotalPrice(sections["side-cart"]);
@@ -49,8 +51,6 @@ const submitForm = (form) => {
     (e) => {
       e.preventDefault();
       addProducts(e);
-
-      dataToggle($Q("#shopify-section-side-cart"), true);
     },
   )
 }
