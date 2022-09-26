@@ -92,6 +92,8 @@ export const updatePriceItem = (str, id) => {
  */
  export const updatetotalPrice = (str) => {
 
+  if (!$Q('.cartpage-footer')) return;
+
   if (!$Q("#total-price", stringToHTML(str))) {
     $Q('.cartpage-footer').style.display = 'none';
     return;
