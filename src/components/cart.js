@@ -229,7 +229,6 @@ export const addVariantNew = async (itemId) => {
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
   } else {
-    updateCartItems(sections["side-cart"]);
     updatePriceItem(sections["side-cart"], id);
     updateCartbutton(sections["side-cart"]);
     updatetotalPrice(sections["side-cart"]);
