@@ -1,5 +1,11 @@
 import { $Q } from "../utils/query-selector";
 
+const {
+  first: firstMark,
+  second: secondMark,
+  three: threeMark,
+} = mark;
+
 /* get all data dom */
 const getDataAll = () => {
 
@@ -31,7 +37,7 @@ const getDataAll = () => {
 const percentageBeforeOne = ({totalPrice, limitDiscountOne}) => {
 
   if (totalPrice <= limitDiscountOne) {
-    return calculatePercentageBefore(limitDiscountOne, 13);
+    return calculatePercentageBefore(limitDiscountOne, firstMark);
   }
 }
 
@@ -42,7 +48,7 @@ const percentageBeforeTwo = ({
 }) => {
 
   if ((totalPrice > limitDiscountOne) && (totalPrice <= limitDiscountTwo)) {
-    return calculatePercentageBefore(limitDiscountTwo, 50);
+    return calculatePercentageBefore(limitDiscountTwo, secondMark);
   }
 }
 
@@ -53,7 +59,7 @@ const percentageBeforeThree = ({
 }) => {
 
   if ((totalPrice > limitDiscountTwo) && (totalPrice < limitDiscountThree)) {
-    return calculatePercentageBefore(limitDiscountThree, 88);
+    return calculatePercentageBefore(limitDiscountThree, threeMark);
   }
 }
 
@@ -66,9 +72,9 @@ const getPercentageBefore = ({
   /* all rewards */
 
     const evalPercentageBefore = {
-      13: percentageBeforeOne,
-      50: percentageBeforeTwo,
-      88: percentageBeforeThree,
+      firstMark: percentageBeforeOne,
+      secondMark: percentageBeforeTwo,
+      threeMark: percentageBeforeThree,
     }
 
     const keyArr = Object.keys(evalPercentageBefore);
@@ -106,7 +112,7 @@ const percentageAfterOne = ({
     &&
     (totalPrice <= limitDiscountTwo)
     &&
-    (percentageAfter < 13)) {
+    (percentageAfter < firstMark)) {
     return 20;
   }
 
@@ -123,7 +129,7 @@ const percentageAfterTwo = ({
     &&
     (totalPrice < limitDiscountThree)
     &&
-    (percentageAfter < 50)) {
+    (percentageAfter < secondMark)) {
     return 53;
   }
 }
@@ -133,7 +139,7 @@ const percentageAfterThree = ({
   percentageAfter,
   limitDiscountThree,
 }) => {
-  if ((totalPrice >= limitDiscountThree) && (percentageAfter < 88)) {
+  if ((totalPrice >= limitDiscountThree) && (percentageAfter < threeMark)) {
     return 100;
   }
 }
@@ -180,6 +186,12 @@ const percentageAfterThree = ({
   return percentageAfter;
 }
 
+/**
+ * validate if reward one or two is active
+ * @param {Boolean} activeRewardOne - is active reward 1
+ * @param {Number} limitDiscountOne - limit price reward 2
+ * @param {Number} limitDiscountTwo - limit price rewaards 3
+ */
 const isRewardOneOrTwoActive = (
   activeRewardOne,
   limitDiscountOne,
