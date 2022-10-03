@@ -1,8 +1,14 @@
 import { addRewardProduct } from './cart';
-import { $Q } from '../utils/query-selector'
+import { $Q } from '../utils/query-selector';
+
+const {
+  first: firstMark,
+  second: secondMark,
+  three: threeMark,
+} = mark;
 
 /**
- * get all data dom
+ * get all data rewards and limits dom
  */
  const getDataAll = () => {
 
@@ -33,14 +39,14 @@ import { $Q } from '../utils/query-selector'
 const breakOne = ({totalPrice, limitFreeShipping}) => {
 
   if (totalPrice <= limitFreeShipping) {
-    return calculatePercentageBefore(limitFreeShipping, 13);
+    return calculatePercentageBefore(limitFreeShipping, firstMark);
   }
 }
 
 const breackTwo = ({totalPrice, limitFreeShipping, limitProductOne}) => {
 
   if (totalPrice > limitFreeShipping && totalPrice <= limitProductOne) {
-    return calculatePercentageBefore(limitProductOne, 50);
+    return calculatePercentageBefore(limitProductOne, secondMark);
   }
 }
 
@@ -51,20 +57,29 @@ const breakThree = ({
 }) => {
 
   if (totalPrice > limitProductOne && totalPrice < limitProductTwo) {
-    return calculatePercentageBefore(limitProductTwo, 88);
+    return calculatePercentageBefore(limitProductTwo, threeMark);
   }
 }
 
-const getPercentageBefore = ({totalPrice,
+/**
+ *obtain the percentage of the bar before the break or maximum
+ mark at your position
+ * @param {Number} totalPrice - total cart
+ * @param {Number} limitFreeShipping - price limit free shipping
+ * @param {Number} limitProductOne - price limit rewards 1
+ * @param {Number} limitDiscountLast - price limit rewards last
+ */
+const getPercentageBefore = ({
+  totalPrice,
   limitFreeShipping,
   limitProductOne,
   limitDiscountLast,
 }) => {
 
   const evalConditionBreak = {
-    13: breakOne,
-    50: breackTwo,
-    88: breakThree,
+    firstMark: breakOne,
+    secondMark: breackTwo,
+    threeMark: breakThree,
   }
 
   const keyArr = Object.keys(evalConditionBreak);
@@ -100,7 +115,7 @@ const percentageOne = ({
     &&
     (totalPrice <= limitProductOne)
     &&
-    (percentageAfter < 13)) {
+    (percentageAfter < firstMark)) {
      return 20;
   }
 
@@ -117,7 +132,7 @@ const percentageTwo = ({
     &&
     (totalPrice < limitProductTwo)
     &&
-    (percentageAfter < 50)) {
+    (percentageAfter < secondMark)) {
      return 53;
   }
 }
@@ -130,7 +145,7 @@ const percentageThree = ({
   if (
     (totalPrice >= limitProductTwo)
     &&
-    (percentageAfter < 88)) {
+    (percentageAfter < threeMark)) {
     return 100;
   }
 }
@@ -177,6 +192,13 @@ const percentageThree = ({
   return percentageAfter;
 }
 
+/**
+ * validate which reward is the last one or two, to know which
+ * will be 100% of the bar or which is the last reward.
+ * @param {Boolean} activeRewardOne - is active reward 1 (true or false)
+ * @param {Number} limitProductOne - limit product one rewards
+ * @param {Number} limitProductTwo - limit product two rewards
+ */
 const isRewardOneOrTwoActive = (
   activeRewardOne,
   limitProductOne,
@@ -252,6 +274,19 @@ const isRewardOneOrTwoActive = (
 
 }
 
+/**
+ * if there is more than one reward pass to evaluate in
+ * this function to return the value of the percentage
+ * that the progress bar will have
+ * @param {Object} Object - object {
+    activeRewardOne,
+    activeRewardTwo,
+    limitFreeShipping,
+    limitProductOne,
+    limitProductTwo,
+  }
+ * @param {Number} totalPrice - total cart
+ */
 const calculateMoreOneRewards = (
   {
     activeRewardOne,
@@ -313,6 +348,9 @@ const conditionalRewardObject = (activeRewardOne, activeRewardTwo) => {
   if (activeRewardTwo === 'true' && activeRewardOne === 'true') return "three";
 }
 
+/**
+ * obtain and sort all rewards data for further evaluation
+ */
 const objectDataRewards = () => {
 
   const {
@@ -378,6 +416,10 @@ const addRewardTwo = (data) => {
   }
 }
 
+/**
+ * add rewards
+ * @param {Array} data - item current reward
+ */
 const addRewardOne = (data) => {
   if (!$Q(`[data-id='${data[1][0]}']`)) {
     productRewardSend({[data[1][0]]: 1});
@@ -387,6 +429,10 @@ const addRewardOne = (data) => {
   }
 }
 
+/**
+ * eval delete rewards
+ * @param {Array} data - item current reward
+ */
 const evalDeleteRewards = (data) => {
   if ($Q(`[data-id='${data[2][1]}']`)) {
     deletedProductReward({[data[1][0]]: 0, [data[1][1]]: 0});
