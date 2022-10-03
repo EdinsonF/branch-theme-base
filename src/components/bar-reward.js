@@ -1,6 +1,12 @@
 import { addRewardProduct } from './cart';
 import { $Q } from '../utils/query-selector'
 
+const {
+  first: firstMark,
+  second: secondMark,
+  three: threeMark,
+} = mark;
+
 /* get all data dom */
 const getDataAll = () => {
 
@@ -63,7 +69,7 @@ const productsIsRewardsActive = ({
 const percentageBeforeOne = ({totalPrice, limitProductOne}) => {
 
   if (totalPrice <= limitProductOne) {
-    return calculatePercentageBefore(limitProductOne, 13);
+    return calculatePercentageBefore(limitProductOne, firstMark);
   }
 }
 
@@ -74,7 +80,7 @@ const percentageBeforeTwo = ({
 }) => {
 
   if (totalPrice > limitProductOne && totalPrice <= limitProductTwo) {
-    return calculatePercentageBefore(limitProductTwo, 50);
+    return calculatePercentageBefore(limitProductTwo, secondMark);
   }
 }
 
@@ -85,10 +91,19 @@ const percentageBeforeThree = ({
 }) => {
 
   if (totalPrice > limitProductTwo && totalPrice < limitProductLast) {
-    return calculatePercentageBefore(limitProductLast, 88);
+    return calculatePercentageBefore(limitProductLast, threeMark);
   }
 }
 
+/**
+ *Get percentage before break point bar
+ * @param {Object} object data {
+  totalPrice,
+  limitProductTwo,
+  limitProductOne,
+  limitProductLast,
+}
+ */
 const getPercentageBefore = ({
   totalPrice,
   limitProductTwo,
@@ -97,9 +112,9 @@ const getPercentageBefore = ({
 }) => {
 
   const evalPercentageBefore = {
-    13: percentageBeforeOne,
-    50: percentageBeforeTwo,
-    88: percentageBeforeThree,
+    firstMark: percentageBeforeOne,
+    secondMark: percentageBeforeTwo,
+    threeMark: percentageBeforeThree,
   }
 
   const keyArr = Object.keys(evalPercentageBefore);
@@ -137,7 +152,7 @@ const percentageAfterOne = ({
     &&
     (totalPrice <= limitProductTwo)
     &&
-    (percentageAfter < 13)) {
+    (percentageAfter < firstMark)) {
     return 20;
   }
 }
@@ -153,7 +168,7 @@ const percentageAfterTwo = ({
     &&
     (totalPrice < limitProductThree)
     &&
-    (percentageAfter < 50)) {
+    (percentageAfter < secondMark)) {
     return 53;
   }
 }
@@ -163,7 +178,7 @@ const percentageAfterThree = ({
   percentageAfter,
   limitProductThree,
 }) => {
-  if (totalPrice >= limitProductThree && percentageAfter < 88) {
+  if (totalPrice >= limitProductThree && percentageAfter < threeMark) {
     return 100;
   }
 }
@@ -210,6 +225,18 @@ const percentageAfterThree = ({
   return percentageAfter;
 }
 
+/**
+ * If there is more than one reward, click here
+ * to calculate the progress bar percentage.
+ * @param {Object} Object - data {
+    activeRewardOne,
+    activeRewardTwo,
+    limitProductOne,
+    limitProductTwo,
+    limitProductThree,
+  }
+ * @param {Number} totalPrice - total price cart
+ */
 const calculateMoreOneRewards = (
   {
     activeRewardOne,
@@ -311,6 +338,9 @@ const conditionalRewardObject = (activeRewardOne, activeRewardTwo) => {
   if (activeRewardTwo === 'true' && activeRewardOne === 'true') return "three";
 }
 
+/**
+ * data all rewards and limit with product reward
+ */
 const objectDataRewards = () => {
 
   const {
