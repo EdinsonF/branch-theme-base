@@ -16,7 +16,9 @@ import { setQuantity } from "../utils/input-quantity";
 import { openAccordion } from "../utils/accordion";
 import { openDropDown } from "../components/header";
 import { toggleDataActive } from "../utils/toggle-dataset";
+import { validateRegisterCustomer } from "../components/news-letters";
 
+validateRegisterCustomer();
 variantOnChange(".variants");
 recommendedProduct();
 btnAddToCart(".add-product-cart");
