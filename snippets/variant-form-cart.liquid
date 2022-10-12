@@ -1,9 +1,12 @@
+<!-- eslint-disable max-len -->
 {% comment %}
   render variant side cart unique slect - color checkbox or select list
 
   Accepts:
   - product - object product
-  - option_field: {String} Reference options in radio buttons. To render radio buttons include string with: 'Color'. only one variant. color = radio, other = select
+  - option_field: {String} Reference options in radio buttons.
+  To render radio buttons include string with:
+  'Color'. only one variant. color = radio, other = select
   - variant_selected - variant current select item cart
   - index - number line item
   - variant_old - variant old select adding cart
@@ -23,36 +26,38 @@
 -%}
 
 <div class="variant-cart">
-  <input 
+  <input
   type="hidden"
   class="line-variants-currents"
   value="{{ index }}"
-  >
-  <input 
+  />
+  <input
     type="hidden"
     class="variant_old"
     value="{{ variant_old }}-{{ index }}"
-  >
+  />
   <input
-    type="hidden" 
-    id="variants" 
-    value="{{ product.variants | json | escape }}"
-  >
-  <input 
     type="hidden"
-    id="options" 
+    id="variants"
+    value="{{ product.variants | json | escape }}"
+  />
+  <input
+    type="hidden"
+    id="options"
     value="{{ product.options | json | escape }}"
-  >
+  />
   <input
     type="hidden"
     name="id"
     value="{{ first_variant.id }}"
     data-variant="{{ product.handle }}"
-  >
+  />
   {% assign lengthOptions = product.options | size %}
   {%- unless product.has_only_default_variant -%}
     {%- for option_name in product.options -%}
-    {%- assign option_visible = variant_selected | where: "name", option_name -%}
+    {%- assign option_visible = variant_selected
+      | where: "name", option_name
+    -%}
       {% if option_field == option_name %}
         {% liquid
           if forloop.index == 1
@@ -63,8 +68,8 @@
             assign available_value = first_variant.option3 | strip
           endif
         %}
-        <div 
-          class="variants--options 
+        <div
+          class="variants--options
           {% if lengthOptions >= 1 %}
             variants--options__acordion
           {% endif %}"
@@ -80,24 +85,23 @@
                 class="variants--radio-container"
                 data-type="{{ option_name }}"
               >
-                
+
                 {%- for option_value in product.options_by_name[option_name].values -%}
-                  
                   <label
-                    class="variant_radio-button"
+                    class="variant__radio-button"
                     title="{{ option_name }} {{ option_value }}"
                   >
                     <input
                       class="hidden js-option"
                       type="radio"
-                      name="{{ option_name }}-{{ index }}" 
+                      name="{{ option_name }}-{{ index }}"
                       value="{{ option_value }}"
                       {% if option_value == option_visible[0].value %}
                         checked="checked"
                       {% endif %}
-                    >
+                    />
                     <div
-                      class="variant_radio-button--design option_{{ option_value | handleize }}" 
+                      class="variant__radio-button--design option_{{ option_value | handleize }}"
                     >
                     </div>
                   </label>
@@ -105,14 +109,14 @@
               </div>
 
           {%- else -%}
-            
-            <div class="variants--radio-container variants--select-container form_textfield"> 
+
+            <div class="variants--radio-container variants--select-container form_textfield">
               <select
                 name="{{ option_name }}"
                 class="variants--select-tag js-option"
               >
                 {%- for option_value in product.options_by_name[option_name].values -%}
-                  <option 
+                  <option
                     value="{{ option_value }}"
                     {% if option_value == option_visible[0].value %}
                       selected="true"
@@ -131,16 +135,13 @@
               <input
                 class="hidden js-option element-combination"
                 type="text"
-                name="{{ option_hidden_selected.name }}" 
+                name="{{ option_hidden_selected.name }}"
                 value="{{ option_hidden_selected.value }}"
-              >
+              />
             {% endif %}
         {% endfor %}
-      {% endif %}     
+      {% endif %}
     {%- endfor -%}
   {%- endunless -%}
 
-  
-
 </div>
-  

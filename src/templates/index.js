@@ -9,14 +9,16 @@ import {
   deleteItem,
   onChangeItemCart,
   openCloseCart,
-  eventSelectVarianSideCart
+  eventSelectVarianSideCart,
 } from "../components/cart";
 import { setQuantity } from "../utils/input-quantity";
 
 import { openAccordion } from "../utils/accordion";
 import { openDropDown } from "../components/header";
 import { toggleDataActive } from "../utils/toggle-dataset";
+import { validateRegisterCustomer } from "../components/news-letters";
 
+validateRegisterCustomer();
 variantOnChange(".variants");
 eventSelectVarianSideCart('.variant-cart');
 btnAddToCart(".add-product-cart");
@@ -29,4 +31,3 @@ onChangeItemCart();
 openAccordion();
 openDropDown();
 toggleDataActive("#burger-nav-js", "#nav-list-js");
-
