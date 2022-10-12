@@ -19,9 +19,9 @@
   </div>
 
   <div class="container__reward-content">
-    
-    <div class="container__reward-content--reward">   
-        <p 
+
+    <div class="container__reward-content--reward">
+        <p
           class="point-unique
           {% unless active_reward_two or  active_reward_three %}
             point-none
@@ -29,20 +29,19 @@
           "
         >
           |
-        </p> 
-      
+        </p>
       ${{ amount_reward_one }} = {{ text_reward_one }}
     </div>
-    
+
     {% if active_reward_two %}
       <div class="container__reward-content--reward">
-        <p class="point-product-one">|</p> 
+        <p class="point-product-one">|</p>
         ${{ amount_reward_two }} = {{ text_reward_two }}
       </div>
     {% endif %}
     {% if active_reward_three %}
-      <div class="container__reward-content--reward"> 
-        <p class="point-product-two">|</p> 
+      <div class="container__reward-content--reward">
+        <p class="point-product-two">|</p>
         ${{ amount_reward_three }} = {{ text_reward_three }}
       </div>
     {% endif %}
