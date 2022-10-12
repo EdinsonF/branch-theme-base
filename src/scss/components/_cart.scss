@@ -3,8 +3,8 @@
 .overlay {
   width: 100%;
   height: 100%;
-  position: fixed;
   right: 0;
+  position: fixed;
   top: 0;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
@@ -78,7 +78,7 @@
     top: 0;
     background-color: #FFF;
     z-index: 1;
-    width: 100%; 
+    width: 100%;
     span {
       padding: 0 5%;
     }

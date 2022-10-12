@@ -31,12 +31,14 @@ class API {
         headers: {
           'Content-Type': 'application/json',
         },
+        // eslint-disable-next-line no-undef
         url: `${routes.cart_add_url}.js`,
         data: JSON.stringify(formData),
       });
 
       return data;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -57,7 +59,9 @@ class API {
   ) {
 
     const formData = {
+
       updates: objectItem,
+
     };
 
     //Support bundled section rendering
@@ -71,6 +75,7 @@ class API {
         headers: {
           "Content-Type": "application/json",
         },
+        // eslint-disable-next-line no-undef
         url: `${routes.cart_update_url}.js`,
         data: JSON.stringify(formData),
       });
@@ -118,6 +123,7 @@ class API {
       });
       return data;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -135,6 +141,7 @@ class API {
       } = await axios.get(`?sections=${sections}`);
       return html;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -146,6 +153,7 @@ class API {
       } = await axios.get(`${base}?section_id=${section}`);
       return html;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -166,6 +174,7 @@ class API {
       } = await axios.get(`${base}?variant=${variantID}`);
       return html;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -194,6 +203,7 @@ class API {
       const { data } = await axios.get(url);
       return data;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
@@ -208,6 +218,7 @@ class API {
       const { data } = await axios.get(url);
       return data;
     } catch (error) {
+      // eslint-disable-next-line no-undef
       console.error(`Error: ${error.message}`);
     }
   }
