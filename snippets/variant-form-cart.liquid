@@ -12,7 +12,7 @@
   - variant_old - variant old select adding cart
 
   Usage:
-  {% render 'variants-form'
+  {% render 'variants-form-cart'
     product: product,
     option_field: 'Color',
     variant_selected: item.options_with_values,
@@ -110,7 +110,7 @@
 
           {%- else -%}
 
-            <div class="variants--radio-container variants--select-container form_textfield">
+            <div class="variants--radio-container variants--select-container form__textfield">
               <select
                 name="{{ option_name }}"
                 class="variants--select-tag js-option"
