@@ -13,8 +13,10 @@ const CART_SECTION = "side-cart,cart-page";
 /**
  * Add products in cart
  * @param {number} itemId - id product variant
+ * @param {boolean} isOpenCart - open cart or no (if true opening cart
+ * went add product )
  */
- const addProducts = async (itemId, option) => {
+ const addProducts = async (itemId, isOpenCart) => {
 
   const cartParams = {
     items: [
@@ -29,8 +31,8 @@ const CART_SECTION = "side-cart,cart-page";
   const { sections = null } = await api.addToCart(cartParams);
   if (!sections) return null;
 
-  if (!option) {
-    dataToggle($Q("#shopify-section-side-cart"), true);
+  if (isOpenCart) {
+    dataToggle($Q("#shopify-section-side-cart"), isOpenCart);
   }
 
   updateCartItems(sections["side-cart"]);
@@ -52,7 +54,7 @@ const CART_SECTION = "side-cart,cart-page";
     }
   }
 
-  addProducts(itemId);
+  addProducts(itemId, true);
 }
 
 const submitForm = (form) => (
@@ -129,7 +131,7 @@ export const btnAddToCart = (formQuery) => {
  const changeSelectCheck = (e) => {
   const idProduct = e.target.value;
   if (e.target.checked) {
-    addProducts(idProduct, true);
+    addProducts(idProduct, false);
     return;
   }
   const elementLine = $Q(`[data-id="${idProduct}"]`).dataset.index;

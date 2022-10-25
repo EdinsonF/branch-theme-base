@@ -16,8 +16,8 @@
 
 {% assign price = recommend_product.price | money %}
 {%
-  assign text_replace = text_recommended 
-  | replace: '[title]', recommend_product.product.title 
+  assign text_replace = text_recommended
+  | replace: '[title]', recommend_product.product.title
   | replace: '[price]',  price
 %}
 <label class="recommended">
