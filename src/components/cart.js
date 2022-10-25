@@ -120,7 +120,7 @@ const disableOptionVariant = (parent, arrVisibilityCombination) => {
 }
 
 /**
- * get variant avaliable
+ * validate varian avalible and unavaliable
  * @param {HTML} parent - element variant change
  */
  const validateVariantAvalible = (parent) => {
