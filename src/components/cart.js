@@ -151,8 +151,9 @@ const disableOptionVariant = (parent, arrVisibilityCombination) => {
     option.addEventListener(
       'change',
       () => {
+        const oldQuantity = $Q(".input-quantity", parent.closest(".cart-items__container")).value;
         selectVariant(parent);
-        getDataVariant(parent);
+        getDataVariant(parent, oldQuantity);
       },
     );
   });
@@ -175,12 +176,12 @@ export const eventSelectVarianSideCart = (component) => {
 
 }
 
-export const addVariantNew = async (itemId) => {
+export const addVariantNew = async (itemId, quantity = 1) => {
   const cartParams = {
     items: [
       {
         id: itemId,
-        quantity: 1,
+        quantity: quantity,
       },
     ],
     sections: CART_SECTION,

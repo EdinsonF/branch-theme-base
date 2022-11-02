@@ -24,7 +24,7 @@ async function sectionHandle(handle, variantId) {
   }
 }
 
-export const getDataVariant = async (parent) => {
+export const getDataVariant = async (parent, oldQuantity) => {
 
   const line = $Q('.line-variants-currents', parent).value;
   const varianSelect = $Q('[name="id"]', parent).value;
@@ -32,7 +32,7 @@ export const getDataVariant = async (parent) => {
   const variantOld = $Q('.variant_old', parent).value;
 
   await updateCart(line, 0, variantOld, true);
-  await addVariantNew(varianSelect);
+  await addVariantNew(varianSelect, oldQuantity);
 
 }
 

@@ -55,6 +55,7 @@ export function selectVariant(parent) {
     option.addEventListener(
       'change',
       (e) => {
+        console.log("chenged");
         selectVariant(parent);
         queryVariants(e);
       },
