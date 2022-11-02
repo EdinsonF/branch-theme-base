@@ -451,8 +451,7 @@ const evalDeleteRewards = (data) => {
     2: addRewardTwo,
     1: addRewardOne,
   }
-  if (totalPrice >= data[0]) {
-
+  if (totalPrice >= data[0] && data[1] != null) {
     validateAddRewards[data[1].length](data);
   }
 
