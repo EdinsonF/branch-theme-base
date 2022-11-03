@@ -58,6 +58,8 @@ class API {
     sections = undefined,
   ) {
 
+    console.log("work");
+
     const formData = {
       updates: objectItem,
     };
@@ -77,7 +79,6 @@ class API {
         url: `${routes.cart_update_url}.js`,
         data: JSON.stringify(formData),
       });
-
       return data;
     } catch (error) {
       console.error(`Error: ${error.message}`);
