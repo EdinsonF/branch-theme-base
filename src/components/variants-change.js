@@ -3,27 +3,6 @@ import api from "../services/api"
 import { stringToHTML } from "../utils/to-html";
 
 /**
- * Captures the HTML section of the product in question and returns data
- *
- * @param {String} handle Data element of the product
- * to which the query will be made
- * @param {String} variantId Id of the selected variant
- * @returns Object - price, available, button
- */
-async function sectionHandle(handle, variantId) {
-  const htmlResponse = await api.shopifyVariantByUrl(`/products/${handle}`, variantId);
-  const variantPrice = $Q(".price-product-js", stringToHTML(htmlResponse));
-  const variantAvailable = $Q('[name="available"]', stringToHTML(htmlResponse));
-  const button = $Q('.btn-cart-js', stringToHTML(htmlResponse));
-
-  return {
-    price: variantPrice.outerHTML,
-    available: variantAvailable.value,
-    button: button.textContent,
-  }
-}
-
-/**
  * Inject new price node to the section
  *
  * @param {HTMLCollection} variantPrice - Object with the price value
@@ -31,7 +10,7 @@ async function sectionHandle(handle, variantId) {
  * with className 'product-js'
  *
  */
-function updatePrice(variantPrice, parent) {
+ function updatePrice(variantPrice, parent) {
   const sectionPrice = $Q(".price-product-js", parent);
 
   sectionPrice.innerHTML = variantPrice;
@@ -57,6 +36,28 @@ function updateButton(available, parent, newText) {
 }
 
 /**
+
+ * Captures the HTML section of the product in question and returns data
+ *
+ * @param {String} handle Data element of the product
+ * to which the query will be made
+ * @param {String} variantId Id of the selected variant
+ * @returns Object - price, available, button
+ */
+ async function sectionHandle(handle, variantId) {
+  const htmlResponse = await api.shopifyVariantByUrl(`/products/${handle}`, variantId);
+  const variantPrice = $Q(".price-product-js", stringToHTML(htmlResponse));
+  const variantAvailable = $Q('[name="available"]', stringToHTML(htmlResponse));
+  const button = $Q('.btn-cart-js', stringToHTML(htmlResponse));
+
+  return {
+    price: variantPrice.outerHTML,
+    available: variantAvailable.value,
+    button: button.textContent,
+  }
+}
+
+/**
  * Section rendering to dynamic price and available data
  *
  * @param {HTMLElement} param0 - Node with event change
@@ -65,7 +66,8 @@ function updateButton(available, parent, newText) {
  * @author Cristian Velasco
  * @version 2.0
  */
- export async function queryVariants({ target }) {
+export async function queryVariants({ target }) {
+
   const addcartBtn = $Q('.btn-cart-js', target.closest('.product-js'));
   const {
     value,
