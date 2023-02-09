@@ -142,6 +142,18 @@
         "label": "Border hover"
       },
       {
+        "type": "color",
+        "id": "colors_bar_reward_empty",
+        "default": "#dedede",
+        "label": "Bar reward empty"
+      },
+      {
+        "type": "color",
+        "id": "colors_bar_reward_active",
+        "default": "#444444",
+        "label": "Bar reward active"
+      },
+      {
         "type": "header",
         "content": "Variants colors"
       },

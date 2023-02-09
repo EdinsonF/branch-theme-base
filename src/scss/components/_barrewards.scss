@@ -1,0 +1,48 @@
+
+.container__reward {
+  position: relative;
+  height: 90px;
+  padding: 0;
+  &-bar {
+    overflow: hidden;
+    width: 100%;
+    height: 6px;
+    margin-top: 10px;
+    background: var(--color-bar-reward-empty);
+    border-radius: 50px;
+
+    &--progress {
+      width: 0;
+      height: 100%;
+      background: var(--color-bar-reward-active);
+      border-radius: inherit;
+      transition: width .3s ease-in-out;
+    }
+  }
+
+  &-content {
+    position: absolute;
+    z-index: -1;
+    top: 10px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  
+
+    &--reward {
+      width: 25%;
+      text-align: center;
+      p {
+        color: var(--color-bar-reward-empty);
+        font-weight: 600;
+      }
+      p.active {
+        color: var(--color-bar-reward-active);
+      }
+      p.point-none {
+        color: #44444400;
+      }
+    }
+  }
+}

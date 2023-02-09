@@ -91,6 +91,7 @@
     </main>
 
     {% section 'footer' %}
+    {% section 'side-cart' %}
 
     <ul hidden>
       <li id="a11y-refresh-page-message">
@@ -120,6 +121,12 @@
 
       window.accessibilityStrings = {
         shareSuccess: `{{ 'general.share.success_message' | t }}`,
+      }
+
+      window.mark = {
+        first: 13,
+        second: 50,
+        three: 88
       }
     </script>
     <!-- eslint-enable max-len -->
