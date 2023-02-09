@@ -1,0 +1,44 @@
+{% assign cart_title = "sections.cart.title" | t %}
+
+<div class="cart-wrapper">
+  {% render 'cart-header'
+    cart: cart,
+    title: cart_title,
+  %}
+
+  {% render 'cart-items'
+    cart: cart
+    text_recommended: section.settings.text_recommended;
+  %}
+
+  {% render 'cart-footer'
+    cart: cart,
+    shipping_info: section.settings.shipping_info
+  %}
+
+  <span class="cart-close">
+    {% render 'icon-close' %}
+  </span>
+
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "class": "cart",
+  "settings": [
+    {
+      "type": "text",
+      "id": "shipping_info",
+      "label": "Shipping inf",
+      "default": " Le livraison estimé : J+2/3"
+    },
+    {
+      "type": "text",
+      "id": "text_recommended",
+      "label": "Text product recommended",
+      "default": "add [title] for [price]"
+    }
+  ]
+}
+{% endschema %}
