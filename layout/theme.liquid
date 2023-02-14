@@ -91,6 +91,7 @@
     </main>
 
     {% section 'footer' %}
+    {% section 'side-cart' %}
 
     <ul hidden>
       <li id="a11y-refresh-page-message">
@@ -137,14 +138,14 @@
     {%- endif -%}
 
     {%- if request.path contains 'contact' -%}
-      <script 
+      <script
         src="{{ 'contact.js' | asset_url }}"
         defer="defer"
       ></script>
     {%- endif -%}
 
     {%- if request.page_type contains 'customers' -%}
-      <script 
+      <script
         src="{{ 'customer.js' | asset_url }}"
         defer="defer"
       ></script>
