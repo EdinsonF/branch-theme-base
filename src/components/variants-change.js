@@ -1,6 +1,7 @@
 import { $Q } from "../utils/query-selector";
 import api from "../services/api"
 import { stringToHTML } from "../utils/to-html";
+import { addVariantNew, updateCart } from "./cart";
 
 /**
  * Captures the HTML section of the product in question and returns data
@@ -21,6 +22,18 @@ async function sectionHandle(handle, variantId) {
     available: variantAvailable.value,
     button: button.textContent,
   }
+}
+
+export const getDataVariant = async (parent, oldQuantity) => {
+
+  const line = $Q('.line-variants-currents', parent).value;
+  const varianSelect = $Q('[name="id"]', parent).value;
+
+  const variantOld = $Q('.variant_old', parent).value;
+
+  await updateCart(line, 0, variantOld, true);
+  await addVariantNew(varianSelect, oldQuantity);
+
 }
 
 /**

@@ -15,6 +15,7 @@ class API {
   * @returns {object} Line items associated with the added items and sections
   */
   async addToCart({ items, sections = undefined }) {
+
     const formData = {
       items: items,
     };
@@ -34,6 +35,7 @@ class API {
         url: `${routes.cart_add_url}.js`,
         data: JSON.stringify(formData),
       });
+
       return data;
     } catch (error) {
       // eslint-disable-next-line no-undef
@@ -81,6 +83,47 @@ class API {
       return data;
     } catch (error) {
       // eslint-disable-next-line no-undef
+      console.error(`Error: ${error.message}`);
+    }
+  }
+
+  /**
+  * Update the cart's line item quantities
+  * @param {{
+   *   line: number,
+   *   quantity: number,
+   *   sections: string
+   * }} config – Contains the product variant,
+   * the quantity and section to update
+   * @returns {object} The JSON of the cart and HTML of the sections
+   */
+  async changeCart({
+    line,
+    quantity,
+    sections = undefined,
+  }) {
+
+    const formData = {
+    'line': line,
+    'quantity': quantity,
+    };
+
+    //Support bundled section rendering
+    if (sections) {
+      formData.sections = sections;
+    }
+
+    try {
+      const { data } = await axios({
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        url: `${routes.cart_change_url}.js`,
+        data: JSON.stringify(formData),
+      });
+      return data;
+    } catch (error) {
       console.error(`Error: ${error.message}`);
     }
   }
